@@ -1,0 +1,49 @@
+{
+  "services": {
+    "cloudantNoSQLDB": [
+      {
+        "name": "Cloudant-HIPF",
+        "label": "cloudantNoSQLDB",
+        "plan": "Shared",
+        "credentials": {
+        "apikey": "SeIDcR3g18alY7UNidB3_P3qaYcxotk8XrPWMQuGoKys",
+        "host": "0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix.cloudantnosqldb.appdomain.cloud",
+        "iam_apikey_description": "Auto-generated for key c8834989-a5f7-425b-b864-6893874fc96a",
+        "iam_apikey_name": "Credenciales de servicio-HIPF",
+        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-2bf2beff-d526-494c-9685-0302805001f9",
+        "url": "https://0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix.cloudantnosqldb.appdomain.cloud",
+        "username": "0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix"
+        }
+      }
+    ],
+    "cloud-object-storage": [
+        {
+              "credentials":
+           {
+              "apikey": "egah9Y-EN9Qdit5BFeI-d7y8mJLFpzzgiyTLvr7F-DuF",
+              "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+              "iam_apikey_description": "Auto-generated for key 023f5623-8cc9-4bcb-966c-4615278bc416",
+              "iam_apikey_name": "Cred1",
+              "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+              "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-bcb49478-8ce3-42ec-9664-f7fc0db469b1",
+              "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/b11e3f1fd7014c0ea8313f6f257f4c86:47c0b6c6-ce69-4722-8d25-5663c953073d::"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "cloud-object-storage",
+            "provider": null,
+            "plan": "Lite",
+            "name": "Cos-HIFP",
+            "tags": [
+                "Lite",
+                "storage",
+                "ibm_release",
+                "ibm_created",
+                "rc_compatible",
+                "ibmcloud-alias"
+            ]
+        }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+
+{% block content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <!--<link rel="stylesheet" type="text/css" href="../static/Dashboard.css">-->
+        <title>Dashboard </title>
+		<style>
+		.btr{background-color:red;color:white;}
+		.btx{background-color:white;border:2px solid red;color:red;width:500px;}
+		.btb{background-color:blue;color:white;width:220px;}
+		.btg{background-color:red;color:white;font-size:4.2em;padding:15px; position:relative;top:50%; }
+		.btd{background-color:white;border:2px solid red;color:red;font-size:4.2em;padding:15px; position:relative;top:50%;}
+		#wrapper {
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			}
+		</style>
+		
+    </head>
+	
+<!--<style>
+.btn{margin:16px 6px 2px 0;color:#ffffff;font-weight:bold;display:inline-block;padding:6px 12px;font-size:16px;text-align:center;cursor:pointer;outline:0;float:left;background-color:#55acee;}
+.btn a {color:#ffffff;text-decoration:none;}
+</style>
+-->
+
+<!--<div class="btn">
+	<button type="button">Dashboard</button>
+</div>-->
+<body>
+<form action="{{ url_for('admin_train') }}" method="post">
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div id="wrapper">
+	
+	<button name="tran_dash" class="bt1 btg" value="train">TRAINING</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button name="tran_dash" class="bt2 btd" value="dashboard">DASHBOARD</button>
+</div>
+</form>
+</body>
+</html>
+{% endblock %}

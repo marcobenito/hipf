@@ -1,0 +1,22 @@
+<html>
+<script type="text/javascript" src="{{url_for('static', filename='jquery.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style1.css') }}">
+<script type="text/javascript">
+ 
+</script>
+<body onload="init()">
+<form action="{{ url_for('handle_data') }}" method="post">
+  <h1>Encuestas HIPF</h1>
+  <div class="inset">
+  <p>
+    <label for="email">Usuario</label>
+    <input type="text" name="usuario" id="usuario">
+  </p>
+  <p>
+    <label for="password">PASSWORD</label>
+    <input type="password" name="password" id="password">
+  </p>
+  </div>
+</form>
+</body>
+</html>

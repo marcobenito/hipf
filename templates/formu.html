@@ -1,0 +1,171 @@
+
+{% block content %}
+<html>
+<script type="text/javascript" src="{{url_for('static', filename='jquery.min.js') }}"></script>
+<!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style1.css') }}">-->
+<style>
+  /* Span style */
+	#text {
+    color: #4DAF74;
+}
+</style>
+<body>
+	<form action="{{ url_for('handle_data') }}" method="post">
+    <center>
+        <h1> Encuesta de Satisfacción  <span id="text">HIPF</span></h1>
+    </center>
+    <div id="side">
+       Ciudad:
+				<select id="ciudad" name="ciudad">
+				<option value="">Elija una Ciudad</option>
+				<option value="0.920">city_103</option>
+				<option value="0.776">city_40</option>
+				<option value="0.624">city_21</option>
+				<option value="0.789">city_115</option>
+				<option value="0.767">city_162</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		  Genero:
+				<select id="sexo" name="sexo">
+				<option value="">Elija una Genero</option>
+				<option value="Male">Male</option>
+				<option value="Fermale">Fermale</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+
+		 Experiencia:
+				<select id="experiencia" name="experiencia">
+				<option value="">Elija Experiencia</option>
+				<option value="Has relevent experience">Con experiencia</option>
+				<option value="No relevent experience">Sin experiencia</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+			
+		Matriculado Universidad:
+				<select id="matricula" name="matricula">
+				<option value="">Elija matricula</option>
+				<option value="Full time course">Curso Completo</option>
+				<option value="Part time course">Medio Curso</option>
+				<option value="no_enrollment">Sin Matricular</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		Nivel Educación:
+				<select id="NivelEdu" name="NivelEdu" onchange="elegir_opcion(this);">
+				<option value="">Elija Nivel Educativo</option>
+				<option value="Primary School">Primary School</option>
+				<option value="High School">High School</option>
+				<option value="Graduate">Graduate</option>
+				<option value="Masters">Masters</option>
+				<option value="Phd">Phd</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>		
+		Educación:
+				<select id="Educativo" name="Educativo">
+				<option value="">Elija Educativo</option>
+				<option value="Arts">Arts</option>
+				<option value="Business Degree">Business Degree</option>
+				<option value="Humanities">Humanities</option>
+				<option value="No Major">No Major</option>
+				<option value="STEM">STEM</option>
+				<option value="Other">Other</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		Experiencia:
+				<select id="añosexperiencia" name="añosexperiencia">
+				<option value="">Elija Experiencia años</option>
+				<option value="<1">-1</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value=">20">+20</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<br/><br/>			
+		<br/><br/>
+		Tamaño Compañía:
+				<select id="tamaño" name="tamaño">
+				<option value="">Elija tamaño compañia</option>
+				<option value="<10">- 10</option>
+				<option value="10/49">entre 10-49</option>
+				<option value="50-99">entre 50-99</option>
+				<option value="100-500">entre 100-500</option>
+				<option value="500-999">entre 500-999</option>
+				<option value="1000-4999">entre 1000-4999</option>
+				<option value="5000-9999">entre 5000-9999</option>
+				<option value="10000+">+ 10000</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		Sector Compañía:
+				<select id="Sector" name="Sector">
+				<option value="">Elija sector compañia</option>
+				<option value="Early Stage Startup">Early Stage Startup</option>
+				<option value="Funded Startup">Funded Startup</option>
+				<option value="NGO">NGO</option>
+				<option value="Public Sector">Public Sector</option>
+				<option value="Pvt Ltd">Pvt Ltd</option>
+				<option value="Other">Other</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		<br/><br/>		
+		ultimo nuevo trabajo:
+				<select id="lastWork" name="lastWork" onchange="elegir_opcion(this);">
+				<option value="">Elija ultimo trabajo</option>
+				<option value="never">Nunca</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value=">4">+ 4</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>	
+		Horas formación:
+				<select id="horas" name="horas" onchange="elegir_opcion(this);">
+				<option value="">Elija horas formación</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<br/><br/>		
+				¿Nos puede indicar como se siente usted en la empresa? :
+				<BR>
+				<TEXTAREA name = "comen_sensa" rows = 4 cols = 60  wrap = virtual ></TEXTAREA>
+		<br/><br/>	
+		 <div style="margin-top: 10;">
+			 <button class="ripple" id="btn" type="submit"> Enviar </button>
+			&nbsp;	
+            <button id="clr" onclick="erase()"> clear </button>
+            <h3 id="prediction"></h3>
+        </div>		
+    </div>
+	</form>
+</body>
+
+</html>
+{% endblock %}

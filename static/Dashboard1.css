@@ -1,0 +1,30 @@
+.btn {
+  /* Para <button> */
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+   top: 50%;
+   left: 30%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 20px 40px;
+  position: absolute;
+  vertical-align: middle;
+ 
+  
+
+  /* Para <a> */
+  display: inline-block;
+  text-decoration: none;
+
+  /* Otros */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle; 
+}
