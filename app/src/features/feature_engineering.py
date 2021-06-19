@@ -60,13 +60,18 @@ class Encoder():
         for col in X.columns:
             if len(np.unique(X[col])) >= self.limit:
                 self.ft_to_hash.append(col)
+        X1 = np.asarray(X[self.ft_to_hash])
+        X2 = X.drop(columns=self.ft_to_hash)
+        self.ohe.fit(X2)
+        self.fh.fit(X1)
         return self
 
     def transform(self, X):
+
         X1 = np.asarray(X[self.ft_to_hash])
         X2 = X.drop(columns=self.ft_to_hash)
-        ohe = pd.DataFrame(self.ohe.fit(X2).transform(X2).toarray())
-        fh = pd.DataFrame(self.fh.fit(X1).transform(X1).toarray())
+        ohe = pd.DataFrame(self.ohe.transform(X2).toarray())
+        fh = pd.DataFrame(self.fh.transform(X1).toarray())
         return pd.concat([ohe, fh], axis=1)
 
     def fit_transform(self, X, y=None):
@@ -137,6 +142,36 @@ class Imputer1(BaseEstimator, TransformerMixin):
             j = j + 1
         return df_sin_nul
 
+
+class Imputer2(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        self.weights = {}
+        for col in X.columns:
+            df = X[col].dropna()
+            self.weights[col] = df.value_counts() / len(df)
+        return self
+
+    def transform(self, X):
+
+        if isinstance(X, pd.DataFrame):
+            new_data = pd.DataFrame()
+            for key in self.weights.keys():
+                df = X[key]
+                n = df.isna().sum()
+                idx = df.loc[pd.isna(df)].index
+                fill_values = random.choices(self.weights[key].index, self.weights[key].values, k=n)
+                fill_values = pd.Series(fill_values, index=idx)
+                df.fillna(fill_values, inplace=True)
+                new_data = pd.concat([new_data, df], axis=1)
+            new_data.columns = X.columns
+            return new_data
+        elif isinstance(X, pd.Series):
+            for key in self.weights.keys():
+                if pd.isna(X[key]):
+                    fill_value = random.choices(self.weights[key].index, self.weights[key].values, k=1)
+                    X.fillna({key: fill_value[0]}, inplace=True)
+            # Trasponemos los datos para que tengan el formato requerido
+            return pd.DataFrame(X).transpose()
 
 # Clase encargada de convertir los valores a string
 class Stringer(BaseEstimator, TransformerMixin):

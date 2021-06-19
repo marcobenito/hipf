@@ -5,3 +5,5 @@ ibm-cos-sdk==2.10.0
 cloudant==2.14.0
 numpy~=1.20.3
 utils~=1.0.1
+xgboost
+
