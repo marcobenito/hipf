@@ -248,37 +248,31 @@ def df_for_plotting1():
 
     test = data[['target', 'experiencia_relevante']]
     test['experiencia_relevante'] = test['experiencia_relevante'].apply(lambda x: str(x))
-    test['experiencia_relevante'] = test[test['experiencia_relevante'] != 'nan']
-    new_data['experiencia_relevante'] = test
+    new_data['experiencia_relevante'] = test[test['experiencia_relevante'] != 'nan']
 
     test = data[['target', 'universidad_matriculado']]
     test['universidad_matriculado'] = test['universidad_matriculado'].apply(lambda x: str(x))
-    test['universidad_matriculado'] = test[test['universidad_matriculado'] != 'nan']
-    new_data['universidad_matriculado'] = test
+    new_data['universidad_matriculado'] = test[test['universidad_matriculado'] != 'nan']
+
 
     test = data[['target', 'ultimo_nuevo_trabajo']]
     test['ultimo_nuevo_trabajo'] = test['ultimo_nuevo_trabajo'].apply(lambda x: str(x))
-    test['ultimo_nuevo_trabajo'] = test[test['ultimo_nuevo_trabajo'] != 'nan']
-    new_data['ultimo_nuevo_trabajo'] = test
+    new_data['ultimo_nuevo_trabajo'] = test[test['ultimo_nuevo_trabajo'] != 'nan']
 
     test = data[['target', 'genero']]
     test['genero'] = test['genero'].apply(lambda x: str(x))
-    test['genero'] = test[test['genero'] != 'nan']
-    new_data['genero'] = test
+    new_data['genero'] = test[test['genero'] != 'nan']
 
     test = data[['target', 'nivel_educacion']]
     test['nivel_educacion'] = test['nivel_educacion'].apply(lambda x: str(x))
-    test['nivel_educacion'] = test[test['nivel_educacion'] != 'nan']
-    new_data['nivel_educacion'] = test
+    new_data['nivel_educacion'] = test[test['nivel_educacion'] != 'nan']
 
     test = data[['target', 'educacion']]
     test['educacion'] = test['educacion'].apply(lambda x: str(x))
-    test['educacion'] = test[test['educacion'] != 'nan']
-    new_data['educacion'] = test
+    new_data['educacion'] = test[test['educacion'] != 'nan']
 
     test = data[['target', 'tamano_compania']]
     test['tamano_compania'] = test['tamano_compania'].apply(lambda x: str(x))
-    test['tamano_compania'] = test[test['tamano_compania'] != 'nan']
-    new_data['tamano_compania'] = test
+    new_data['tamano_compania'] = test[test['tamano_compania'] != 'nan']
 
     return new_data
