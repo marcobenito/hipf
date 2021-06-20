@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from flask import Flask, request, render_template, jsonify, url_for, send_file
 from dataclasses import dataclass
 
+from app.src.models.predict import predict_pipeline
 from app.src.utils.utils import random_seed
 
 matplotlib.use('Agg')
@@ -218,23 +219,27 @@ def handle_data():
     print('Recogemos los valores')
 
     ##Creamos un dataset para regoger los valores del formulario.
-    df = pd.Series()
 
-    df['ciudad'] = request.form['ciudad']
-    df['sexo'] = request.form['sexo']
-    df['experiencia'] = request.form['experiencia']
-    df['matricula'] = request.form['matricula']
-    df['NivelEdu'] = request.form['NivelEdu']
-    df['Educativo'] = request.form['Educativo']
-    df['añosexperiencia'] = request.form['añosexperiencia']
-    df['tamaño'] = request.form['tamaño']
-    df['Sector'] = request.form['Sector']
-    df['lastWork'] = request.form['lastWork']
-    df['horas'] = request.form['horas']
-
-    print(df)
     # your code
-    return {'Recogiendo valores': 'hipf'}
+
+    print('Recogemos los valores', )
+
+    features = [[0,request.form['name_ciudad'],
+                 request.form['ciudad'],
+                 request.form['sexo'],
+                 request.form['experiencia'],
+                 request.form['matricula'],
+                 request.form['NivelEdu'],
+                 request.form['Educativo'],
+                 request.form['añosexperiencia'],
+                 request.form['tamaño'],
+                 request.form['Sector'],
+                 request.form['lastWork'],
+                 request.form['horas']]]
+
+    y_pred = predict_pipeline(features)
+
+    return {'Predicted value': y_pred}
 
 
 # main

@@ -14,6 +14,11 @@ COS_AUTH_ENDPOINT = "https://iam.cloud.ibm.com/identity/token"
 
 # ruta del directorio ráiz del proyecto
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+init_cols = ["empleado_id","ciudad","indice_desarrollo_ciudad", "genero", "experiencia_relevante", "universidad_matriculado", "nivel_educacion", "educacion",
+             "experiencia", "tamano_compania","tipo_compania", "ultimo_nuevo_trabajo", "horas_formacion"]
+
+
+#empleado_id,ciudad,indice_desarrollo_ciudad,genero,experiencia_relevante,universidad_matriculado,nivel_educacion,educacion,experiencia,tamano_compania,tipo_compania,ultimo_nuevo_trabajo,horas_formacion,target
 
 # conexión a servicios de IBM Cloud (VCAP_SERVICES) usando variables de entorno o fichero local
 # Variable de entorno (Despliegue)
@@ -35,6 +40,7 @@ if 'VCAP_SERVICES' in os.environ:
             creds = vcap['cloud-object-storage'][0]['credentials']
             #endpoint_url = COS_ENDPOINT
             endpoint_url = "https://s3.ap.cloud-object-storage.appdomain.cloud/"
+
             ibm_service_instance_id = creds['resource_instance_id']
             ibm_api_key_id = creds['apikey']
             # se crea la conexión a IBM COS

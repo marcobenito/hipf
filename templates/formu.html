@@ -9,14 +9,33 @@
     color: #4DAF74;
 }
 </style>
+<script type="text/javascript">
+
+function showInp(){
+
+	var tmsel = document.getElementById('ciudad').length;
+	var t;
+
+	for(var z = 0; z < tmsel; z++)
+	{
+		t = document.getElementById('ciudad').options[z].innerHTML;
+		
+		if (document.getElementById('ciudad').options[z].selected==true){
+			document.getElementById('name_ciudad').value=t;
+		}
+		
+	} 
+}
+</script>
 <body>
 	<form action="{{ url_for('handle_data') }}" method="post">
     <center>
         <h1> Encuesta de Satisfacción  <span id="text">HIPF</span></h1>
     </center>
     <div id="side">
+		<input id="name_ciudad" name="name_ciudad" style="display: none"/>
        Ciudad:
-				<select id="ciudad" name="ciudad">
+				<select id="ciudad" name="ciudad" onchange="showInp()">
 				<option value="">Elija una Ciudad</option>
 				<option value="0.920">city_103</option>
 				<option value="0.776">city_40</option>
