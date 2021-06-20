@@ -1,9 +1,8 @@
-
-
+import flask
 import matplotlib
 import numpy as np
 import pandas as pd
-import torch
+# import torch
 import os
 
 from werkzeug.utils import redirect
@@ -18,13 +17,25 @@ from app.src.models import train_model
 #from app.src.models import  train
 #from os import makedirs
 import matplotlib.pyplot as plt
-from flask import Flask, request, render_template, jsonify, url_for
+from flask import Flask, request, render_template, jsonify, url_for, send_file
 from dataclasses import dataclass
 
 from app.src.utils.utils import random_seed
 
 matplotlib.use('Agg')
 import warnings
+
+
+import dash
+import dash_html_components as html
+import dash_core_components as dcc
+import matplotlib.pyplot as plt
+import seaborn as sns
+from app.src.utils.utils import plot_feature_vs_target
+from dash.dependencies import Input, Output
+sns.set_theme()
+import plotly.express as px
+
 
 # Quitar warnings innecesarios de la salida
 
@@ -33,12 +44,14 @@ warnings.filterwarnings('ignore')
 
 
 MODEL = None
-DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+#DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
 # inicializar la app bajo el framework Flask
 app = Flask(__name__)
 
+dash_app = dash.Dash(__name__, server=app, url_base_pathname='/admin_train/')
+dash_app.layout = html.Div(id='dash-container')
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8000
 port = int(os.getenv('PORT', 8000))
@@ -55,15 +68,15 @@ class SaveOutput:
         self.outputs = []
 
 
-def register_hook():
-    save_output = SaveOutput()
-    hook_handles = []
-
-    for layer in MODEL.modules():
-        if isinstance(layer, torch.nn.modules.conv.Conv2d):
-            handle = layer.register_forward_hook(save_output)
-            hook_handles.append(handle)
-    return save_output
+# def register_hook():
+#     save_output = SaveOutput()
+#     hook_handles = []
+#
+#     for layer in MODEL.modules():
+#         if isinstance(layer, torch.nn.modules.conv.Conv2d):
+#             handle = layer.register_forward_hook(save_output)
+#             hook_handles.append(handle)
+#     return save_output
 
 #https://www.jetbrains.com/help/pycharm/creating-web-application-with-flask.html#login
 
@@ -88,7 +101,10 @@ def login():
         return render_template('signup_form.html')
 
 
-
+df = px.data.tips()
+days = df.day.unique()
+from app.src.utils.utils import df_for_plotting1
+data_plot = df_for_plotting1()
 
 @app.route('/admin_train', methods=["GET", "POST"])
 def admin_train():
@@ -103,15 +119,97 @@ def admin_train():
             train_model.training_pipeline(df_path)
             print('---->Sale del trainmodel')
             return render_template('train.html')
+            #return render_template('signup_form.html')
         elif request.form['tran_dash'] == 'dashboard':
-            return render_template('dashboard.html')
+            # from app.src.utils.utils import id_ciudad
+            # data = pd.read_csv('app/data/ds_job.csv')
+            #
+            # col = 'idx'
+            # test1 = data[['indice_desarrollo_ciudad', 'target']]
+            # test1['idx'] = test1.indice_desarrollo_ciudad.apply(id_ciudad)
+            # test1 = test1.drop(columns='indice_desarrollo_ciudad')
+            # vals = ['<1'] + list(range(1, 21)) + ['>20']
+            # vals = [str(i) for i in vals]
+            # test1[col] = test1[col].apply(lambda x: str(x))
+            # fig = plot_feature_vs_target(test1[test1[col] != 'nan'], col)
+            # df = pd.DataFrame({
+            #     "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+            #     "Amount": [4, 1, 2, 2, 4, 5],
+            #     "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+            # })
+            # #
+            # #fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+            # dash_app.layout = html.Div(children=[
+            #     html.H1(children='HIPF DASHBOARD'),
+            #
+            #     html.Div(children='''
+            #         Información útil para el estudio de la fuga de personal
+            #     ''', style={'width': 500}),
+            #
+            #     dcc.Graph(
+            #         id='example-graph',
+            #         figure=fig
+            #     )
+            # ])
+            # df = px.data.tips()
+            # days = df.day.unique()
+            funcion1()
+            # dash_app.layout = html.Div([
+            #     dcc.Dropdown(
+            #         id="dropdown",
+            #         options=[{"label": x, "value": x} for x in days],
+            #         value=days[0],
+            #         clearable=False,
+            #     ),
+            #     dcc.Graph(id="bar-chart"),
+            # ])
+
+            return dash_app.index()
+
+            #return render_template('dashboard.html', figure=fig)
         else:
             pass  # unknown
     elif request.method == 'GET':
+
         return render_template('contact.html')
 
 
+def funcion1():
+    dash_app.layout = html.Div([
+                    dcc.Dropdown(
+                        id="dropdown",
+                        options=[{"label": x, "value": x} for x in data_plot.keys()],
+                        value=list(data_plot.keys())[0],
+                        clearable=False,
+                    ),
+                    dcc.Graph(id="bar-chart"),
+                ])
+
+
+@dash_app.callback(
+    Output("bar-chart", "figure"),
+    [Input("dropdown", "value")])
+def update_bar_chart(col):
+    #mask = df["day"] == day
+    fig = plot_feature_vs_target(data_plot[col], col)
+    # fig = go.bar(data_plot[col], x="sex", y="total_bill",
+    #              color="smoker", barmode="group")
+    return fig
+
     print('Admin das')
+
+@app.route('/fig')
+def fig(text='hola'):
+    from io import BytesIO
+    fig = plt.figure()
+    ax1 = fig.add_subplot(2, 1, 1)
+    ax1.plot(range(10), 'b-')
+    plt.title=text
+
+    img=BytesIO()
+    fig.savefig(img)
+    img.seek(0)
+    return send_file(img, mimetype='image/png')
 
 
 @app.route('/handle_data', methods=["GET", "POST"])
@@ -120,7 +218,7 @@ def handle_data():
     print('Recogemos los valores')
 
     ##Creamos un dataset para regoger los valores del formulario.
-    df = pd.DataFrame()
+    df = pd.Series()
 
     df['ciudad'] = request.form['ciudad']
     df['sexo'] = request.form['sexo']
@@ -134,10 +232,9 @@ def handle_data():
     df['lastWork'] = request.form['lastWork']
     df['horas'] = request.form['horas']
 
-
-    print(df.head)
+    print(df)
     # your code
-    return {'Recogiendo valores': 'Proyecto HIPF'}
+    return {'Recogiendo valores': 'hipf'}
 
 
 # main

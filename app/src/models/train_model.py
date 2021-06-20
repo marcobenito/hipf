@@ -99,7 +99,7 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     clf.fit(X_train1, y_train1)
 
     print('Train score {}'.format(clf.score(X=X_train1, y=y_train1)))
-
+    print('Test score {}'.format(clf.score(X=X_test1, y=y_test)))
 
     print('------> Saving the model {} object on the cloud'.format('model_' + str(int(ts))))
     save_model(clf, 'model', ts)

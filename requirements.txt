@@ -6,4 +6,9 @@ cloudant==2.14.0
 numpy~=1.20.3
 utils~=1.0.1
 xgboost
+matplotlib
+imbalanced-learn
+dash==1.13.3
+seaborn
+
 
