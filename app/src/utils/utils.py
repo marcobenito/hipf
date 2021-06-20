@@ -193,9 +193,6 @@ def plot_feature_vs_target(df, column, vals=None):
     print(df)
     t = np.zeros((2, len(vals)))
     for i, value in enumerate(vals):
-        print(vals, value)
-        print(df[(df[column] == value) & (df['target'] == 0.0)].value_counts().values)
-        print(df[(df[column] == value) & (df['target'] == 1.0)].value_counts().values)
 
         t[0, i] = df[(df[column] == value) & (df['target'] == 0.0)].value_counts().values[0]
         t[1, i] = df[(df[column] == value) & (df['target'] == 1.0)].value_counts().values[0]
