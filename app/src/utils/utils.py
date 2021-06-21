@@ -186,11 +186,12 @@ def plot_feature_vs_target(df, column, vals=None):
     if column == 'experiencia':
         vals = ['<1'] + list(range(1, 21)) + ['>20']
         vals = [str(i) for i in vals]
+    elif column  == 'nivel_educacion':
+        vals = ['Primary School', 'High School', 'Graduate', 'Masters', 'Phd']
     else:
         vals = np.unique(df[column])
     # if vals is None:
     #     vals = np.unique(df[column])
-    print(df)
     t = np.zeros((2, len(vals)))
     for i, value in enumerate(vals):
 
@@ -202,14 +203,17 @@ def plot_feature_vs_target(df, column, vals=None):
     df1 = pd.DataFrame(t.T, index=vals).reset_index()
 
     fig = go.Figure(data=[
-        go.Bar(name='0', x=df1['index'], y=df1[0]),
-        go.Bar(name='1', x=df1['index'], y=df1[1])
+        go.Bar(name='0', x=df1['index'], y=df1[0], marker_color='rgb(55, 83, 109)'),
+        go.Bar(name='1', x=df1['index'], y=df1[1], marker_color='rgb(26, 118, 255)')
     ])
     # plt.figure()
     # df1.plot.bar(stacked=True)
     # plt.title('Target por ' + column)
     # plt.show()
-    fig.update_layout(barmode='stack')
+    fig.update_layout(barmode='stack',
+                      xaxis_title=column,
+                      yaxis_title='Porcentaje'
+                      )
     #fig.show()
     return fig
 
@@ -233,13 +237,12 @@ def df_for_plotting1():
     # columna individualmente
     new_data = {}
     test = data[['indice_desarrollo_ciudad', 'target']]
-    test['idx'] = test.indice_desarrollo_ciudad.apply(id_ciudad)
-    test['idx'] = test['idx'].apply(lambda x: str(x))
+    test['id_desarrollo_ciudad'] = test.indice_desarrollo_ciudad.apply(id_ciudad)
+    test['id_desarrollo_ciudad'] = test['id_desarrollo_ciudad'].apply(lambda x: str(x))
     test = test.drop('indice_desarrollo_ciudad', axis=1)
-    new_data['idx'] = test
+    new_data['id_desarrollo_ciudad'] = test
 
     test = data[['target', 'experiencia']]
-
     test['experiencia'] = test['experiencia'].apply(lambda x: str(x))
     new_data['experiencia'] = test
 
