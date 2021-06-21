@@ -2,4 +2,4 @@
 applications:
 - name: Proyecto HIPF
   random-route: true
-  memory: 256M
+  memory: 5000M

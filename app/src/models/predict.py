@@ -1,3 +1,5 @@
+from sklearn.preprocessing import MinMaxScaler
+
 from ..data.make_datasetPredict import make_dataset
 from app import cos, client
 from cloudant.query import Query
@@ -40,6 +42,9 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # Carga de la configuración de entrenamiento
     model_config = load_model_config(model_info_db_name)['model_config']
 
+from ..features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
+from ..features.pipeline import combine_features, buckets_experiencia
+from sklearn.pipeline import Pipeline, FeatureUnion
 
 
     # obteniendo la información del modelo en producción
@@ -47,10 +52,52 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # cargando y transformando los datos de entrada
     data_df = make_dataset(data, model_info)
 
+###################metemos lo pipelines ##################################
+
+    ##cat_cols = [i for i in data_df if data_df[str(i)].dtype == 'O']
+    ##num_cols = [i for i in data_df if data_df[str(i)].dtype != 'O']
+
+
+    # pasos del pipeline categórico
+    ##cat_steps = [
+    ##    ('selector', DataFrameSelector(cat_cols)),
+    ##    # Creamos las features que necesitemos
+    ##    ('creator1', CreateFeatures(combine_features, col1='experiencia', col2='experiencia_relevante',
+    ##                                new_col_name='exp_exp-rel', f1=buckets_experiencia)),
+    ##    ('dropper', DropFeatures(['tipo_compania', 'ciudad', 'educacion'])),
+    ##    ('stringer', Stringer()),
+    ##    ('imputer', Imputer(strategy='most_frequent')),
+    ##    ('encoder', Encoder(limit=20))
+    ##]
+
+    ### Pasos del pipeline numérico
+    ##num_steps = [
+    ##    ('selector', DataFrameSelector(num_cols)),
+    ##    ('dropper', DropFeatures(['empleado_id'])),
+    ##    ('imputer', Imputer(strategy='median')),
+    ##    ('scaler', MinMaxScaler())
+    ##]
+
+    ##num_pipeline = Pipeline(num_steps)
+    ##cat_pipeline = Pipeline(cat_steps)
+
+    # Concatenación de pipelines
+    ##full_pipeline = FeatureUnion([
+    ##    ('numeric_pipeline', num_pipeline),
+    ##    ('categorical_pipeline', cat_pipeline)
+    ##])
+
+
+    ##X_pred = full_pipeline.transform(data_df1)
+    ###################metemos lo pipelines ##################################
+
     # Descargando el objeto del modelo
     model_name = model_info['name']+'.pkl'
     print('------> Loading the model {} object from the cloud'.format(model_name))
     model = load_model(model_name)
+    print('model-->',model)
+
+    data_df
 
     # realizando la inferencia con los datos de entrada
     return model.predict(data_df).tolist()

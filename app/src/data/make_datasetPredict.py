@@ -25,8 +25,8 @@ def make_dataset(data, model_info):
     print(data_df)
 
 
-   ## print('---> Transforming data')
-    ## data_df = transform_data(data_df, model_info)
+    ## print('---> Transforming data')
+    ##data_df = transform_data(data_df, model_info)
     ##print('---> Feature engineering')
     ##data_df = feature_engineering(data_df)
     ##print('---> Preparing data for training')
@@ -49,7 +49,7 @@ def get_raw_data_from_request(data):
     return pd.DataFrame(data, columns=init_cols)
 
 
-def transform_data(data_df, model_info, cols_to_remove):
+def transform_data(data_df, model_info):
     """
         Función que permite realizar las primeras tareas de transformación
         de los datos de entrada.
@@ -64,16 +64,18 @@ def transform_data(data_df, model_info, cols_to_remove):
     """
 
     print('------> Removing unnecessary columns')
-    data_df = remove_unwanted_columns(data_df, cols_to_remove)
+    #data_df = remove_unwanted_columns(data_df, cols_to_remove)
 
-    data_df['Pclass'] = data_df['Pclass'].astype(str)
+
 
     # creando dummies originales
     print('------> Encoding data')
     print('---------> Getting encoded columns from cos')
     enc_key = model_info['objects']['encoders']+'.pkl'
+    print(' enc_key-->', enc_key)
     # obteniendo las columnas presentes en el entrenamiento desde COS
     enc_cols = cos.get_object_in_cos(enc_key)
+    print(' enc_cols-->', enc_cols)
     # columnas dummies generadas en los datos de entrada
     data_df = pd.get_dummies(data_df)
 
