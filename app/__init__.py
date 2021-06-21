@@ -17,6 +17,11 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 init_cols = ["empleado_id","ciudad","indice_desarrollo_ciudad", "genero", "experiencia_relevante", "universidad_matriculado", "nivel_educacion", "educacion",
              "experiencia", "tamano_compania","tipo_compania", "ultimo_nuevo_trabajo", "horas_formacion"]
 
+iam_authentic = 'Ruk59D8Cw_hwNNdl7KoyK5uEtZVNVt_C5Xx9W-uoG-BN'
+nlu_version = '2019-07-12'
+url_service = 'https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/70cf1ea3-87d2-43b8-9e1b-a02aab274d75'
+tipo_analisis = "sentiment"
+comentario_cols = [ "pago","habilidades","ambiente", "avance"]
 
 #empleado_id,ciudad,indice_desarrollo_ciudad,genero,experiencia_relevante,universidad_matriculado,nivel_educacion,educacion,experiencia,tamano_compania,tipo_compania,ultimo_nuevo_trabajo,horas_formacion,target
 

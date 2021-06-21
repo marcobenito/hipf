@@ -216,13 +216,11 @@ def fig(text='hola'):
 @app.route('/handle_data', methods=["GET", "POST"])
 def handle_data():
 
-    print('Recogemos los valores')
+    print('Recogemos los valores para un registro de empleado')
 
-    ##Creamos un dataset para regoger los valores del formulario.
+    ##Creamos un dataset para recoger los valores del formulario.
 
-    # your code
-
-    print('Recogemos los valores', )
+    print('Recogemos los valores...', )
 
     features = [[0,request.form['name_ciudad'],
                  request.form['ciudad'],
@@ -235,9 +233,17 @@ def handle_data():
                  request.form['tamaño'],
                  request.form['Sector'],
                  request.form['lastWork'],
-                 request.form['horas']]]
+                 request.form['horas'],
+                 request.form['comen_sensa']]]
 
     y_pred = predict_pipeline(features)
+
+    # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
+    score_nlu = extrae(comen_sensa, 0)
+    if score_nlu > 0:
+        print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
+    else
+        print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
 
     return {'Predicted value': y_pred}
 

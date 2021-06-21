@@ -10,5 +10,6 @@ matplotlib
 imbalanced-learn
 dash==1.13.3
 seaborn
+ibm_watson==5.1.0
 
 
