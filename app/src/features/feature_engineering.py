@@ -7,7 +7,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from app.src.features.pipeline import combine_features, calculo_ponderado, imputacion_nulos
 
 
-class CreateFeatures(BaseEstimator, TransformerMixin):
+class CreateFeatures(TransformerMixin):
     def __init__(self, function, *args, **kwargs):
         self.function = function
         self.args = args
@@ -27,15 +27,15 @@ class CreateFeatures(BaseEstimator, TransformerMixin):
 
 class DropFeatures(BaseEstimator, TransformerMixin):
     def __init__(self, features_to_drop):
-        self.features = features_to_drop
+        self.features_to_drop = features_to_drop
 
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
         if len(X.shape) == 1:
-            return X.drop(labels=self.features)
-        return X.drop(columns=self.features)
+            return X.drop(labels=self.features_to_drop)
+        return X.drop(columns=self.features_to_drop)
 
 
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder

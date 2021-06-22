@@ -35,10 +35,14 @@ import dash_bootstrap_components as dbc
 import matplotlib.pyplot as plt
 import seaborn as sns
 from app.src.utils.utils import plot_feature_vs_target
-from app.dashboard.layout import dashboard_layout
+from app.dashboard.layout import *
 from dash.dependencies import Input, Output
 sns.set_theme()
 import plotly.express as px
+
+from app.src.features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
+from app.src.features.pipeline import combine_features, buckets_experiencia
+from sklearn.pipeline import Pipeline, FeatureUnion
 
 
 # Quitar warnings innecesarios de la salida
@@ -109,7 +113,7 @@ def login():
 
 df = px.data.tips()
 days = df.day.unique()
-from app.src.utils.utils import df_for_plotting1
+from app.src.utils.utils import df_for_plotting1, plot_roc
 data_plot = df_for_plotting1()
 
 @app.route('/admin_train', methods=["GET", "POST"])
@@ -127,7 +131,7 @@ def admin_train():
             return render_template('train.html')
             #return render_template('signup_form.html')
         elif request.form['tran_dash'] == 'dashboard':
-            dashboard_layout(dash_app)
+            dashboard_layout_1(dash_app)
             #funcion3()
             #funcion1()
             #funcion2()
@@ -140,103 +144,30 @@ def admin_train():
 
         return render_template('contact.html')
 
-def funcion2():
-    colors = {
-        'background': '#111111',
-        'text': '#7FDBFF'
-    }
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
 
-    fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    dash_app.update_layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-        html.H1(
-            children='Hello Dash',
-            style={
-                'textAlign': 'center',
-                'color': colors['text']
-            }
-        ),
-
-        html.Div(children='Dash: A web application framework for Python.', style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }),
-
-        dcc.Graph(
-            id='example-graph-2',
-            figure=fig
-        )
-    ])
-
-def funcion1():
-    dash_app.layout = html.Div([
-                    dcc.Dropdown(
-                        id="dropdown",
-                        options=[{"label": x, "value": x} for x in data_plot.keys()],
-                        value=list(data_plot.keys())[0],
-                        clearable=False,
-                    ),
-                    dcc.Graph(id="bar-chart"),
-                ])
-
-def funcion3():
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-
-    fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    dash_app.layout = html.Div(children=[
-        html.Div(children=[
-        html.H1(children='HIPF DASHBOARD', className='header-title'),
-
-        html.P(
-            children="Analiza la fuga de empleados de forma simple y efectiva",
-            className="header-description",
-        ),
-            ], className='header'),
-
-        html.Div([
-            html.Div([
-            dash_table.DataTable(
-                id='table',
-                columns=[{"name": i, "id": i} for i in df.columns],
-                data=df.to_dict('records'),
-                style_table={'width': '50%'}
-
-            )], className='quarter'),
-            html.Div([
-                dcc.Graph(
-                    id='example-graph-2',
-                    figure=fig1
-                ),
-            ], className='quarter')
-        ], className='row'),
+@dash_app.callback(
+              [Output('page-container', 'children'),
+               Output('page-title', 'children')],
+              [Input('btn-nclicks-1', 'n_clicks'),
+              Input('btn-nclicks-2', 'n_clicks'),
+              Input('btn-nclicks-3', 'n_clicks')]
+              )
+def displayClick(btn1, btn2, btn3):
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if 'btn-nclicks-1' in changed_id:
+        msg = 'Report de la encuesta realizada'
+        return report_layout(), msg
+    elif 'btn-nclicks-2' in changed_id:
+        msg = 'Estudio de datos históricos de construcción del modelo'
+        return historic_data_layout(), msg
+    elif 'btn-nclicks-3' in changed_id:
+        msg = 'Métricas del modelo en producción'
+        return model_layout(), msg
+    else:
+        msg = 'Report de la encuesta realizada'
+        return report_layout(), msg
 
 
-        html.Div([
-            html.Div([
-                dcc.Dropdown(
-                    id="dropdown",
-                    options=[{"label": x, "value": x} for x in data_plot.keys()],
-                    value=list(data_plot.keys())[0],
-                    clearable=False,
-                ),
-                dcc.Graph(id="bar-chart"),
-            ], className='quarter'),
-            html.Div([
-                dcc.Graph(
-                    id='example-graph-2',
-                    figure=fig1
-                ),
-            ], className='quarter')
-        ], className='row')
-    ])
 
 
 
@@ -246,6 +177,16 @@ def funcion3():
 def update_bar_chart(col):
     #mask = df["day"] == day
     fig = plot_feature_vs_target(data_plot[col], col)
+    # fig = go.bar(data_plot[col], x="sex", y="total_bill",
+    #              color="smoker", barmode="group")
+    return fig
+
+@dash_app.callback(
+    Output("bar-chart-1", "figure"),
+    [Input("dropdown-1", "value")])
+def update_bar_chart_1(val):
+
+    fig = plot_roc(val)
     # fig = go.bar(data_plot[col], x="sex", y="total_bill",
     #              color="smoker", barmode="group")
     return fig
@@ -311,8 +252,9 @@ def handle_data():
                  request.form['tamaño'],
                  request.form['Sector'],
                  request.form['lastWork'],
-                 request.form['horas'],
-                 request.form['comen_sensa']]]
+                 request.form['horas']
+                 ]]
+    comentario = request.form['comen_sensa']
 
     y_pred = predict_pipeline(features)
 

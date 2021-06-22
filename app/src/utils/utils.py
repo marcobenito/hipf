@@ -276,3 +276,22 @@ def df_for_plotting1():
     new_data['tamano_compania'] = test[test['tamano_compania'] != 'nan']
 
     return new_data
+
+def plot_roc(val):
+    name = 'model_roc_' + val + '.pkl'
+    path = 'app/dashboard/objects/' + name
+    with open(path, 'rb') as f:
+        df = pickle.load(f)
+
+    fig = px.line(df, x='fpr', y='tpr', color='model', labels={
+                     "fpr": "False Positive Rate",
+                     "tpr": "True Positive Rate"
+                 }, title='ROC Curves of different models', hover_data=['AUC_Score'])
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    return fig

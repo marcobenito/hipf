@@ -1,3 +1,5 @@
+import pickle
+
 from sklearn.preprocessing import MinMaxScaler
 
 from ..data.make_datasetPredict import make_dataset
@@ -14,13 +16,13 @@ import pandas as pd
 import numpy as np
 
 #Inicializar datos de acceso desde el script que evaluará los datos de comentarios
-authenticator = IAMAuthenticator(iam_authentic)
-natural_language_understanding = NaturalLanguageUnderstandingV1(
-    version = nlu_version,
-    authenticator = authenticator
-)
-
-natural_language_understanding.set_service_url(url_service)
+# authenticator = IAMAuthenticator(iam_authentic)
+# natural_language_understanding = NaturalLanguageUnderstandingV1(
+#     version = nlu_version,
+#     authenticator = authenticator
+# )
+#
+# natural_language_understanding.set_service_url(url_service)
 
 def predict_pipeline(data, model_info_db_name='hipf_db'):
 
@@ -42,9 +44,9 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # Carga de la configuración de entrenamiento
     model_config = load_model_config(model_info_db_name)['model_config']
 
-from ..features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
-from ..features.pipeline import combine_features, buckets_experiencia
-from sklearn.pipeline import Pipeline, FeatureUnion
+    from ..features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
+    from ..features.pipeline import combine_features, buckets_experiencia
+    from sklearn.pipeline import Pipeline, FeatureUnion
 
 
     # obteniendo la información del modelo en producción
@@ -87,7 +89,9 @@ from sklearn.pipeline import Pipeline, FeatureUnion
     ##    ('categorical_pipeline', cat_pipeline)
     ##])
 
-
+    with open('app/data/pipeline.pkl', 'rb') as f:
+        pipe = pickle.load(f)
+    X_pred = pipe.transform(data_df)
     ##X_pred = full_pipeline.transform(data_df1)
     ###################metemos lo pipelines ##################################
 
@@ -97,10 +101,10 @@ from sklearn.pipeline import Pipeline, FeatureUnion
     model = load_model(model_name)
     print('model-->',model)
 
-    data_df
+
 
     # realizando la inferencia con los datos de entrada
-    return model.predict(data_df).tolist()
+    return model.predict(X_pred).tolist()
 
 
 def load_model(name, bucket_name='models-hifp'):
