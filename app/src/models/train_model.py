@@ -1,4 +1,5 @@
 import os
+import pickle
 
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler
@@ -56,12 +57,12 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     # pasos del pipeline categórico
     cat_steps = [
         ('selector', DataFrameSelector(cat_cols)),
+        ('imputer', Imputer(strategy='most_frequent')),
         # Creamos las features que necesitemos
         ('creator1', CreateFeatures(combine_features, col1='experiencia', col2='experiencia_relevante',
                                     new_col_name='exp_exp-rel', f1=buckets_experiencia)),
         ('dropper', DropFeatures(['tipo_compania', 'ciudad', 'educacion'])),
         ('stringer', Stringer()),
-        ('imputer', Imputer(strategy='most_frequent')),
         ('encoder', Encoder(limit=20))
     ]
 
@@ -83,8 +84,12 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     ])
 
     # Aplicamos el pipeline de transformación
-    X_train1 = full_pipeline.fit_transform(X_train_res)
-    X_test1 = full_pipeline.transform(X_test)
+    pipe = full_pipeline.fit(X_train_res)
+    X_train1 = pipe.transform(X_train_res)
+    X_test1 = pipe.transform(X_test)
+    path = os.path.join('checkpoint/pipeline.pkl')
+    with open(path, 'wb') as f:
+        pickle.dump(pipe, f)
 
     print('------>Cargamos el Pickle con los mejores parametros del grid search ')
 

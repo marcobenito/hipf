@@ -52,7 +52,7 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # obteniendo la información del modelo en producción
     model_info = get_best_model_info(model_info_db_name)
     # cargando y transformando los datos de entrada
-    data_df = make_dataset(data, model_info)
+    #data_df = make_dataset(data, model_info)
 
 ###################metemos lo pipelines ##################################
 
@@ -89,9 +89,9 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     ##    ('categorical_pipeline', cat_pipeline)
     ##])
 
-    with open('app/data/pipeline.pkl', 'rb') as f:
+    with open('checkpoint/pipeline.pkl', 'rb') as f:
         pipe = pickle.load(f)
-    X_pred = pipe.transform(data_df)
+    X_pred = pipe.transform(data)
     ##X_pred = full_pipeline.transform(data_df1)
     ###################metemos lo pipelines ##################################
 
@@ -101,7 +101,8 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     model = load_model(model_name)
     print('model-->',model)
 
-
+    print(X_pred)
+    print(X_pred.shape)
 
     # realizando la inferencia con los datos de entrada
     return model.predict(X_pred).tolist()

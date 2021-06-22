@@ -256,14 +256,30 @@ def handle_data():
                  ]]
     comentario = request.form['comen_sensa']
 
+    features = pd.Series()
+    features['empleado_id'] = '1000'
+    features['ciudad'] = 'city_103'
+    features['indice_desarrollo_ciudad'] = request.form['ciudad']
+    features['genero'] = request.form['sexo']
+    features['experiencia_relevante'] = np.nan
+    features['universidad_matriculado'] = request.form['matricula']
+    features['nivel_educacion'] = request.form['NivelEdu']
+    features['educacion'] = request.form['Educativo']
+    features['experiencia'] = request.form['añosexperiencia']
+    features['tamano_compania'] = request.form['tamaño']
+    features['tipo_compania'] = request.form['Sector']
+    features['ultimo_nuevo_trabajo'] = request.form['lastWork']
+    features['horas_formacion'] = request.form['horas']
+    print(features)
+
     y_pred = predict_pipeline(features)
 
     # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
-    score_nlu = extrae(comen_sensa, 0)
-    if score_nlu > 0:
-        print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
-    else:
-        print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
+    # score_nlu = extrae(comen_sensa, 0)
+    # if score_nlu > 0:
+    #     print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
+    # else:
+    #     print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
 
     return {'Predicted value': y_pred}
 
