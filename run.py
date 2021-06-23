@@ -20,13 +20,13 @@ import matplotlib.pyplot as plt
 from flask import Flask, request, render_template, jsonify, url_for, send_file
 from dataclasses import dataclass
 
-from app.src.models.predict import predict_pipeline
-from app.src.utils.utils import random_seed
+from app.src.models.predict import predict_pipeline, extrae
+from app.src.utils.utils import random_seed, plot_roc
+from app.src.data.conectBBDD import sql_table_train, sql_table_Predict, sql_connection, sql_table_nlu, \
+    sql_Insert_predict, sql_update_predict, select_id
 
 matplotlib.use('Agg')
 import warnings
-
-
 import dash
 import dash_table
 import dash_html_components as html
@@ -35,7 +35,7 @@ import dash_bootstrap_components as dbc
 import matplotlib.pyplot as plt
 import seaborn as sns
 from app.src.utils.utils import plot_feature_vs_target
-from app.dashboard.layout import *
+from app.dashboard.layout import dashboard_layout, dashboard_layout_1, report_layout, historic_data_layout, model_layout
 from dash.dependencies import Input, Output
 sns.set_theme()
 import plotly.express as px
@@ -94,6 +94,15 @@ class SaveOutput:
 
 @app.route('/')
 def index():
+
+    print('Conexion BBDD y creamos las tablas')
+    con = sql_connection()
+    sql_table_train(con)
+    sql_table_Predict(con)
+    sql_table_nlu(con)
+    print('Tablas craedas')
+
+
     return render_template('Inicio.html')
 
 
@@ -113,7 +122,7 @@ def login():
 
 df = px.data.tips()
 days = df.day.unique()
-from app.src.utils.utils import df_for_plotting1, plot_roc
+from app.src.utils.utils import df_for_plotting1
 data_plot = df_for_plotting1()
 
 @app.route('/admin_train', methods=["GET", "POST"])
@@ -166,9 +175,6 @@ def displayClick(btn1, btn2, btn3):
     else:
         msg = 'Report de la encuesta realizada'
         return report_layout(), msg
-
-
-
 
 
 @dash_app.callback(
@@ -235,53 +241,147 @@ def fig(text='hola'):
 @app.route('/handle_data', methods=["GET", "POST"])
 def handle_data():
 
-    print('Recogemos los valores para un registro de empleado')
+    print('Recogemos los valores...')
 
-    ##Creamos un dataset para recoger los valores del formulario.
 
-    print('Recogemos los valores...', )
-
-    features = [[0,request.form['name_ciudad'],
-                 request.form['ciudad'],
-                 request.form['sexo'],
-                 request.form['experiencia'],
-                 request.form['matricula'],
-                 request.form['NivelEdu'],
-                 request.form['Educativo'],
-                 request.form['añosexperiencia'],
-                 request.form['tamaño'],
-                 request.form['Sector'],
-                 request.form['lastWork'],
-                 request.form['horas']
-                 ]]
-    comentario = request.form['comen_sensa']
+    #comentario = request.form['comen_sensa']
 
     features = pd.Series()
-    features['empleado_id'] = '1000'
-    features['ciudad'] = 'city_103'
-    features['indice_desarrollo_ciudad'] = request.form['ciudad']
-    features['genero'] = request.form['sexo']
-    features['experiencia_relevante'] = np.nan
-    features['universidad_matriculado'] = request.form['matricula']
-    features['nivel_educacion'] = request.form['NivelEdu']
-    features['educacion'] = request.form['Educativo']
-    features['experiencia'] = request.form['añosexperiencia']
-    features['tamano_compania'] = request.form['tamaño']
-    features['tipo_compania'] = request.form['Sector']
-    features['ultimo_nuevo_trabajo'] = request.form['lastWork']
-    features['horas_formacion'] = request.form['horas']
+
+
+    id =select_id()
+
+    print('valor ID...', id)
+
+    features['empleado_id'] = id
+
+    if request.form['name_ciudad'] == "":
+        features['ciudad'] = np.nan
+    else:
+        features['ciudad'] = request.form['name_ciudad']
+
+    if request.form['ciudad'] == "":
+        features['indice_desarrollo_ciudad'] = np.nan
+    else:
+        features['indice_desarrollo_ciudad'] = request.form['ciudad']
+
+    if request.form['sexo'] == "":
+        features['genero'] = np.nan
+    else:
+        features['genero'] = request.form['sexo']
+
+    if request.form['experiencia'] == "":
+        features['experiencia_relevante'] = np.nan
+    else:
+        features['experiencia_relevante'] = request.form['experiencia']
+
+    if request.form['matricula']=="":
+        features['universidad_matriculado'] =np.nan
+    else:
+        features['universidad_matriculado'] = request.form['matricula']
+
+    if request.form['NivelEdu']=="":
+        features['nivel_educacion'] =np.nan
+    else:
+        features['nivel_educacion'] = request.form['NivelEdu']
+
+    if request.form['Educativo']=="":
+        features['educacion'] =np.nan
+    else:
+        features['educacion'] = request.form['Educativo']
+
+
+    if request.form['añosexperiencia']=="":
+        features['experiencia'] =np.nan
+    else:
+        features['experiencia'] = request.form['añosexperiencia']
+
+    if request.form['tamaño']=="":
+        features['tamano_compania'] =np.nan
+    else:
+        features['tamano_compania'] = request.form['tamaño']
+
+    if request.form['Sector']=="":
+        features['tipo_compania'] =np.nan
+    else:
+        features['tipo_compania'] = request.form['Sector']
+
+    if request.form['lastWork']=="":
+        features['ultimo_nuevo_trabajo'] =np.nan
+    else:
+        features['ultimo_nuevo_trabajo'] = request.form['lastWork']
+
+    if request.form['horas'] == "":
+        features['horas_formacion'] = np.nan
+    else:
+        features['horas_formacion'] = request.form['horas']
+
     print(features)
+
+
 
     y_pred = predict_pipeline(features)
 
-    # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
-    # score_nlu = extrae(comen_sensa, 0)
-    # if score_nlu > 0:
-    #     print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
-    # else:
-    #     print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
+    pred=y_pred[0]
 
-    return {'Predicted value': y_pred}
+    sql_Insert_predict(features)
+
+    predict = pd.Series()
+    predict['target'] = pred
+    predict['empleado_id'] = id
+    print('guardamos el resultado de la prediccion')
+
+    print('modificamos la variable target ', predict)
+
+    sql_update_predict(predict)
+
+    predict = pd.Series()
+    predict['target'] = id
+    predict['empleado_id'] = id
+    print('guardamos el resultado de la prediccion')
+
+######John te meto las cajas en un panda series con el id_ empleado
+    pdnlu = pd.Series()
+
+    pdnlu['empleado_id'] = id
+
+    if request.form['comen_pago'] == "":
+        pdnlu['pago'] = np.nan
+    else:
+        pdnlu['pago'] = request.form['comen_pago']
+
+    if request.form['comen_habilidad'] == "":
+        pdnlu['habilidad'] = np.nan
+    else:
+        pdnlu['habilidad'] = request.form['comen_habilidad']
+
+    if request.form['comen_ambiente'] == "":
+        pdnlu['ambiente'] = np.nan
+    else:
+        pdnlu['ambiente'] = request.form['comen_ambiente']
+
+    if request.form['comen_avance'] == "":
+        pdnlu['avance'] = np.nan
+    else:
+        pdnlu['avance'] = request.form['comen_avance']
+
+    print(pdnlu)
+
+    # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
+    #score_nlu = extrae(comen_sensa, 0)
+    #if score_nlu > 0:
+    #    print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
+    #else:
+    #    print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
+
+
+
+
+    ####Aquí llamamos a una funcion para insertar los datos en la tabla nlu_hifp
+
+
+
+    return {'Predicted value': pred}
 
 
 # main

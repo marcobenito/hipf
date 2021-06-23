@@ -22,7 +22,8 @@ def make_dataset(data, model_info):
 
     print('---> Getting data')
     data_df = get_raw_data_from_request(data)
-    print(data_df)
+
+    print('data_df',data_df)
 
 
     ## print('---> Transforming data')
@@ -46,7 +47,9 @@ def get_raw_data_from_request(data):
         Returns:
            DataFrame. Dataset con los datos de entrada.
     """
-    return pd.DataFrame(data, columns=init_cols)
+    df = pd.DataFrame(data,columns=init_cols)
+    df.reset_index(drop=True, inplace=True)
+    return df.copy()
 
 
 def transform_data(data_df, model_info):

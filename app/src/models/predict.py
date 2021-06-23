@@ -5,16 +5,15 @@ from sklearn.preprocessing import MinMaxScaler
 from ..data.make_datasetPredict import make_dataset
 from app import cos, client
 from cloudant.query import Query
-#Librerias para incluir NLU
+# Librerias para incluir NLU
 import json
 import ibm_watson
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_watson.natural_language_understanding_v1 import Features, CategoriesOptions, RelationsOptions,EmotionOptions
+from ibm_watson.natural_language_understanding_v1 import Features, CategoriesOptions, RelationsOptions, EmotionOptions
 from ibm_watson.natural_language_understanding_v1 import SentimentOptions
 import pandas as pd
 import numpy as np
-
 #Inicializar datos de acceso desde el script que evaluará los datos de comentarios
 # authenticator = IAMAuthenticator(iam_authentic)
 # natural_language_understanding = NaturalLanguageUnderstandingV1(
@@ -29,14 +28,11 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     """
         Función para gestionar el pipeline completo de inferencia
         del modelo.
-
         Args:
             path (str):  Ruta hacia los datos.
-
         Kwargs:
             model_info_db_name (str):  base de datos a usar para almacenar
             la info del modelo.
-
         Returns:
             list. Lista con las predicciones hechas.
     """
@@ -54,59 +50,25 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # cargando y transformando los datos de entrada
     #data_df = make_dataset(data, model_info)
 
-###################metemos lo pipelines ##################################
-
-    ##cat_cols = [i for i in data_df if data_df[str(i)].dtype == 'O']
-    ##num_cols = [i for i in data_df if data_df[str(i)].dtype != 'O']
-
-
-    # pasos del pipeline categórico
-    ##cat_steps = [
-    ##    ('selector', DataFrameSelector(cat_cols)),
-    ##    # Creamos las features que necesitemos
-    ##    ('creator1', CreateFeatures(combine_features, col1='experiencia', col2='experiencia_relevante',
-    ##                                new_col_name='exp_exp-rel', f1=buckets_experiencia)),
-    ##    ('dropper', DropFeatures(['tipo_compania', 'ciudad', 'educacion'])),
-    ##    ('stringer', Stringer()),
-    ##    ('imputer', Imputer(strategy='most_frequent')),
-    ##    ('encoder', Encoder(limit=20))
-    ##]
-
-    ### Pasos del pipeline numérico
-    ##num_steps = [
-    ##    ('selector', DataFrameSelector(num_cols)),
-    ##    ('dropper', DropFeatures(['empleado_id'])),
-    ##    ('imputer', Imputer(strategy='median')),
-    ##    ('scaler', MinMaxScaler())
-    ##]
-
-    ##num_pipeline = Pipeline(num_steps)
-    ##cat_pipeline = Pipeline(cat_steps)
-
-    # Concatenación de pipelines
-    ##full_pipeline = FeatureUnion([
-    ##    ('numeric_pipeline', num_pipeline),
-    ##    ('categorical_pipeline', cat_pipeline)
-    ##])
 
     with open('checkpoint/pipeline.pkl', 'rb') as f:
         pipe = pickle.load(f)
+
     X_pred = pipe.transform(data)
-    ##X_pred = full_pipeline.transform(data_df1)
-    ###################metemos lo pipelines ##################################
 
     # Descargando el objeto del modelo
     model_name = model_info['name']+'.pkl'
     print('------> Loading the model {} object from the cloud'.format(model_name))
     model = load_model(model_name)
-    print('model-->',model)
+    #print('model-->',model)
 
-    print(X_pred)
-    print(X_pred.shape)
+    #print(X_pred)
+    #print(X_pred.shape)
+    print('-----------------------prediccion->',model.predict(X_pred)[0])
+
 
     # realizando la inferencia con los datos de entrada
     return model.predict(X_pred).tolist()
-
 
 def load_model(name, bucket_name='models-hifp'):
     """

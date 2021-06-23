@@ -1,6 +1,7 @@
 import os
 import pickle
 
+import joblib
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler
 
@@ -83,6 +84,9 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
         ('categorical_pipeline', cat_pipeline)
     ])
 
+
+
+
     # Aplicamos el pipeline de transformación
     pipe = full_pipeline.fit(X_train_res)
     X_train1 = pipe.transform(X_train_res)
@@ -98,6 +102,11 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     params = get_raw_pikle_from_local(pickle_path)
 
     print('------>Los mejores parametros',params)
+
+##/*****************Probamos a meter los el modelo en el pipeine *****************/
+
+
+
 
     print('------>Fit del modelo  XGBRFClassifier')
     clf = XGBRFClassifier(**params)

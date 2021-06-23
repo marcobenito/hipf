@@ -1,5 +1,5 @@
 ---
 applications:
-- name: Proyecto HIPF
+- name: ProyectoHIFP
   random-route: true
-  memory: 1G
+  memory: 512M
