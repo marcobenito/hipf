@@ -16,7 +16,7 @@ form{
 	padding:5px;
 	border-radius:10px;
 	margin:auto;
-	background-color:#ccc;
+	background-color:#F7F9F9;
 }
 
 form label{
@@ -31,7 +31,7 @@ form input[type="email"]{
 	padding:3px 10px;
 	border:1px solid #f6f6f6;
 	border-radius:3px;
-	background-color:#f6f6f6;
+	background-color:#E3F389;
 	margin:8px 0;
 	display:inline-block;
 }
@@ -44,7 +44,7 @@ form input[type="submit"]{
 	border-radius:5px;
 	display:block;
 	color:#fff;
-	background-color:#000;
+	background-color:#E3F389;
 } 
 
 form input[type="submit"]:hover{
@@ -52,11 +52,11 @@ form input[type="submit"]:hover{
 }
 
 textarea{
-	width:100%;
+	width:80%;
 	height:100px;
 	border:1px solid #f6f6f6;
 	border-radius:3px;
-	background-color:#f6f6f6;			
+	background-color:#fff;
 	margin:8px 0;
 	/*resize: vertical | horizontal | none | both*/
 	resize:none;
@@ -64,6 +64,14 @@ textarea{
 }
 </style>
 <script type="text/javascript">
+
+function erase(){
+	alert('estamos dentro')
+	document.getElementById('name_ciudad')="";
+	document.getElementById('ciudad').options[0].selected=true;
+	document.getElementById('comen_pago').innerHTML="";
+}
+
 
 function showInp(){
 
@@ -85,10 +93,14 @@ function showInp(){
 	<form action="{{ url_for('handle_data') }}" method="post">
 	<div class="container">
 		<div class="">
-			<div >
-				  <center> <h1>Encuesta de Satisfacción <span id="text">HIPF</span></h1></center>
+		<div></div>
+			<div style="border:1px solid #f6f6f6 !important;">
+				  <center><h1>Encuesta de Satisfacción <span id="text">HIPF</span></h1></center> 
 			</div>
-
+		</div>
+		<div style="text-align:right !important;align=middle">
+			 <a href="{{ url_for('index') }}" src="{{url_for('static', filename='offline_22.png') }}"><img src="{{url_for('static', filename='offline_22.png') }}"/></a>
+			<!--<input type="image" alt="Salir" src="{{url_for('static', filename='offline_22.png') }}" width="30" height="30">-->
 		</div>
 	</div>
 	
@@ -285,10 +297,10 @@ function showInp(){
     </div>			
 	 <div style="margin-top: 10">
 	 <center>
-			 <button id="btn" onclick="erase()">Enviar</button>
+			 <button id="btn">Enviar</button>
 			&nbsp;	
-            <button id="clr" onclick="erase()">Clear</button>
-            <h3 id="prediction"></h3>
+            <!--<button id="clr" onclick="erase()">Clear</button>
+            <h3 id="prediction"></h3>-->
 			</center>
        </div>	
 	</form>

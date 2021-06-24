@@ -100,7 +100,7 @@ def index():
     sql_table_train(con)
     sql_table_Predict(con)
     sql_table_nlu(con)
-    print('Tablas craedas')
+    print('Tablas creadas')
 
 
     return render_template('Inicio.html')
@@ -334,6 +334,7 @@ def handle_data():
     print('modificamos la variable target ', predict)
 
     sql_update_predict(predict)
+
 
     predict = pd.Series()
     predict['target'] = id

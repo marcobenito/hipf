@@ -32,6 +32,8 @@ def sql_table_Predict(con):
 
     cursorObj.execute("create table if not exists Predict_hifp (empleado_id	INTEGER,ciudad	TEXT,indice_desarrollo_ciudad	REAL,genero	TEXT,experiencia_relevante	TEXT,universidad_matriculado TEXT,nivel_educacion	TEXT,educacion	TEXT,experiencia	TEXT,tamano_compania	TEXT,tipo_compania	TEXT,ultimo_nuevo_trabajo	TEXT,horas_formacion	INTEGER,target 	REAL)")
 
+
+
     con.commit()
 
     con = sql_connection()
@@ -84,11 +86,13 @@ def select_id():
     con = sql_connection()
     cursorObj = con.cursor()
 
-    cursorObj.execute('SELECT  max(empleado_id) from Predict_hifp')
+    cursorObj.execute('SELECT  ifnull(max(empleado_id),3381) from Predict_hifp')
 
     rows = cursorObj.fetchall()
 
     for row in rows:
-        variable=row[0] +1
+     variable=row[0] +1
+
+    con.close()
 
     return variable
