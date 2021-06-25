@@ -70,7 +70,7 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # realizando la inferencia con los datos de entrada
     return model.predict(X_pred).tolist()
 
-def load_model(name, bucket_name='models-hifp'):
+def load_model(name, bucket_name='hipf-models'):
     """
          Función para cargar el modelo en IBM COS
 

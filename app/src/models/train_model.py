@@ -143,7 +143,7 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
 
 
 
-def save_model(obj, name, timestamp, bucket_name='models-hifp'):
+def save_model(obj, name, timestamp, bucket_name='cos-ia-online-bbn-group02'):
     """
         Función para guardar el modelo en IBM COS
 

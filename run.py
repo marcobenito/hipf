@@ -339,7 +339,6 @@ def handle_data():
 
     sql_update_predict(predict)
 
-
     predict = pd.Series()
     predict['target'] = id
     predict['empleado_id'] = id
