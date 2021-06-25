@@ -20,10 +20,10 @@ import matplotlib.pyplot as plt
 from flask import Flask, request, render_template, jsonify, url_for, send_file
 from dataclasses import dataclass
 
-from app.src.models.predict import predict_pipeline, extrae
+from app.src.models.predict import predict_pipeline, extrae, nlu, iniciar_nlu
 from app.src.utils.utils import random_seed, plot_roc
 from app.src.data.conectBBDD import sql_table_train, sql_table_Predict, sql_connection, sql_table_nlu, \
-    sql_Insert_predict, sql_update_predict, select_id
+    sql_Insert_predict, sql_update_predict, select_id, sql_insert_nlu, select_table
 
 matplotlib.use('Agg')
 import warnings
@@ -64,7 +64,7 @@ dash_app = dash.Dash(__name__, server=app, url_base_pathname='/admin_train/',
 dash_app.layout = html.Div(id='dash-container')
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8000
-port = int(os.getenv('PORT', 8000))
+port = int(os.getenv('PORT', 8001))
 
 
 class SaveOutput:
@@ -102,7 +102,11 @@ def index():
     sql_table_nlu(con)
     print('Tablas creadas')
 
-
+###  ejemplo para MARCO para consultar tabla para graficar
+    query='SELECT * from nlu_hifp'
+    dftemp =  pd.DataFrame(select_table(query))
+    print("Tabla pandas seleccionada nlu_hipf")
+    print(dftemp)
     return render_template('Inicio.html')
 
 
@@ -319,7 +323,7 @@ def handle_data():
     print(features)
 
 
-
+    #Ejecuta proceso de pipeline en prediccion
     y_pred = predict_pipeline(features)
 
     pred=y_pred[0]
@@ -341,7 +345,7 @@ def handle_data():
     predict['empleado_id'] = id
     print('guardamos el resultado de la prediccion')
 
-######John te meto las cajas en un panda series con el id_ empleado
+    #Cargamos las cajas string en un panda series con el id_ empleado
     pdnlu = pd.Series()
 
     pdnlu['empleado_id'] = id
@@ -366,23 +370,36 @@ def handle_data():
     else:
         pdnlu['avance'] = request.form['comen_avance']
 
-    print(pdnlu)
+    print("<< Mostrando los datos para analisis de sentimiento >>")
+    print("   Empleado :",pdnlu[0])
+    print("   Comentario por Pago :",pdnlu[1])
+    print("   Comentario por habilidad :",pdnlu[2])
+    print("   Comentario por ambiente :",pdnlu[3])
+    print("   Comentario por avance :",pdnlu[4])
 
     # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
-    #score_nlu = extrae(comen_sensa, 0)
-    #if score_nlu > 0:
-    #    print("Score del comentario positivo con NLU {0}%".format(score_nlu*100))
-    #else:
-    #    print("Score del comentario negativo con NLU {0}%".format(score_nlu*100))
+    natural_language_understanding = iniciar_nlu()
+    #score_nlu = pd.Series([0.19,-0.3,-0.5,0.21])
+    score_nlu = [extrae(x, 0, natural_language_understanding)    for x in pdnlu[1:5]]
 
-
+    print(score_nlu)
+    for i,scores in enumerate(score_nlu):
+        print("\n### COMENTARIO ", i+1)
+        print(pdnlu[i+1])
+        if scores > 0.2:
+            print("\nEste comentario tiene un sentimiento positivo con NLU {0}%".format(scores*100))
+        elif (scores>0 and scores<0.2):
+            print("\nEste comentario tiene un sentimiento neutro/no positivo con NLU {0}%".format(scores*100))
+        else:
+            print("\nEste comentario tiene un sentimiento negativo con NLU {0}%".format(scores*100))
 
 
     ####Aquí llamamos a una funcion para insertar los datos en la tabla nlu_hifp
+    #print(pdnlu[0], pdnlu[1], pdnlu[2], pdnlu[3], pdnlu[4], score_nlu[0], score_nlu[1], score_nlu[2], score_nlu[3])
+    sql_insert_nlu(pdnlu, score_nlu)
+    print("\n### Los datos fueron insertados en tabla Nlu_hipf ### ")
 
-
-
-    return {'Predicted value': pred}
+    return {'Predicted value': pred }
 
 
 # main
