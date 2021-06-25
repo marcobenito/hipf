@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from app.src.models.predict import predict_pipeline, extrae
 from app.src.utils.utils import random_seed, plot_roc
 from app.src.data.conectBBDD import sql_table_train, sql_table_Predict, sql_connection, sql_table_nlu, \
-    sql_Insert_predict, sql_update_predict, select_id
+    sql_Insert_predict, sql_update_predict, select_id, select_table
 
 matplotlib.use('Agg')
 import warnings
@@ -34,11 +34,13 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import matplotlib.pyplot as plt
 import seaborn as sns
-from app.src.utils.utils import plot_feature_vs_target
-from app.dashboard.layout import dashboard_layout, dashboard_layout_1, report_layout, historic_data_layout, model_layout
+from app.src.utils.utils import plot_feature_vs_target, read_input
+from app.src.utils.utils_co import idh, latitude, longitude, city
+from app.dashboard.layout import dashboard_layout, report_layout, historic_data_layout, model_layout
 from dash.dependencies import Input, Output
 sns.set_theme()
 import plotly.express as px
+import plotly.graph_objects as go
 
 from app.src.features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
 from app.src.features.pipeline import combine_features, buckets_experiencia
@@ -105,7 +107,9 @@ def index():
 
     return render_template('Inicio.html')
 
-
+input_values = read_input()
+cities = input_values['ciudades']
+idh = [idh(city) for city in cities]
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -114,7 +118,7 @@ def login():
 
     if usuario != 'admin':  # if a user is found, we want to redirect back to signup page so user can try again
        ##Accedemos al formulario
-        return render_template('formu.html')
+        return render_template('formu.html', cities=cities, idh=idh)
     else:
         ##Accedemos a la página de Administrador
         return render_template('signup_form.html')
@@ -122,8 +126,9 @@ def login():
 
 df = px.data.tips()
 days = df.day.unique()
-from app.src.utils.utils import df_for_plotting1
-data_plot = df_for_plotting1()
+from app.src.utils.utils import df_for_plotting1, plot_roc, df_for_plotting
+data_plot1 = df_for_plotting1()
+data_plot = df_for_plotting()
 
 @app.route('/admin_train', methods=["GET", "POST"])
 def admin_train():
@@ -140,7 +145,7 @@ def admin_train():
             return render_template('train.html')
             #return render_template('signup_form.html')
         elif request.form['tran_dash'] == 'dashboard':
-            dashboard_layout_1(dash_app)
+            dashboard_layout(dash_app)
             #funcion3()
             #funcion1()
             #funcion2()
@@ -182,7 +187,25 @@ def displayClick(btn1, btn2, btn3):
     [Input("dropdown", "value")])
 def update_bar_chart(col):
     #mask = df["day"] == day
-    fig = plot_feature_vs_target(data_plot[col], col)
+    fig = plot_feature_vs_target(data_plot1[col], col)
+    # fig = go.bar(data_plot[col], x="sex", y="total_bill",
+    #              color="smoker", barmode="group")
+    return fig
+
+@dash_app.callback(
+    Output("bar-chart-circle", "figure"),
+    [Input("dropdown-circle", "value")])
+def update_bar_chart_circle(col):
+    #mask = df["day"] == day
+    X = data_plot[col].value_counts()
+    #fig = go.Figure(data=[go.Pie(labels=X.index, values=X.values, hole=.3)])
+    #X1 = pd.DataFrame([X.index, X.values], columns=['id', 'value'])
+    #print(X1)
+    X = pd.DataFrame(X).reset_index()
+    X.columns = ['id', 'N']
+    fig = px.pie(X, values='N', names='id', color_discrete_sequence=px.colors.sequential.Blues[::-1])
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    #fig = plot_feature_vs_target(data_plot[col], col)
     # fig = go.bar(data_plot[col], x="sex", y="total_bill",
     #              color="smoker", barmode="group")
     return fig
@@ -200,19 +223,21 @@ def update_bar_chart_1(val):
 data = pd.read_csv('app/data/ds_job.csv')[:50]
 #print(data)
 @dash_app.callback(
-    [Output("table", "columns"), Output("table", "data")],
+    [Output("table", "data"), Output("table", "columns")],
     [Input("drop_table", "value")])
 def update_table(col):
     # mask = df["day"] == day
-    print('hola', col)
     if col != 'nada':
         new_data = data[[col, 'target','empleado_id']]
         new_columns = [col, 'target', 'N']
         cols_to_group = [col, 'target']
-        new_data = new_data.groupby(cols_to_group).count()
-        new_data.columns = ['N']
-        return new_data.to_dict('records'), ['N']
+        # new_data = new_data.groupby(cols_to_group).count()
+        # new_data.columns = ['N']
+        # print(new_data[col])
+        # return new_data.to_dict('records'), ['N']
+        return new_data.to_dict('records'), new_columns
     else:
+        print(data)
         return data.to_dict('records'), data.columns
 
 df = pd.DataFrame({
@@ -243,6 +268,7 @@ def handle_data():
 
     print('Recogemos los valores...')
 
+    ##Creamos un dataset para recoger los valores del formulario.
 
     #comentario = request.form['comen_sensa']
 
@@ -255,10 +281,11 @@ def handle_data():
 
     features['empleado_id'] = id
 
-    if request.form['name_ciudad'] == "":
-        features['ciudad'] = np.nan
-    else:
-        features['ciudad'] = request.form['name_ciudad']
+    # if request.form['name_ciudad'] == "":
+    #     features['ciudad'] = np.nan
+    # else:
+    #     features['ciudad'] = request.form['name_ciudad']
+    features['ciudad'] = city(request.form['ciudad'])
 
     if request.form['ciudad'] == "":
         features['indice_desarrollo_ciudad'] = np.nan
@@ -296,15 +323,18 @@ def handle_data():
     else:
         features['experiencia'] = request.form['añosexperiencia']
 
-    if request.form['tamaño']=="":
-        features['tamano_compania'] =np.nan
-    else:
-        features['tamano_compania'] = request.form['tamaño']
 
-    if request.form['Sector']=="":
-        features['tipo_compania'] =np.nan
-    else:
-        features['tipo_compania'] = request.form['Sector']
+    features['tamano_compania'] = input_values['tamano_compania']
+    features['tipo_compania'] = input_values['tipo_compania']
+    # if request.form['tamaño']=="":
+    #     features['tamano_compania'] =np.nan
+    # else:
+    #     features['tamano_compania'] = request.form['tamaño']
+
+    # if request.form['Sector']=="":
+    #     features['tipo_compania'] =np.nan
+    # else:
+    #     features['tipo_compania'] = request.form['Sector']
 
     if request.form['lastWork']=="":
         features['ultimo_nuevo_trabajo'] =np.nan
@@ -317,8 +347,6 @@ def handle_data():
         features['horas_formacion'] = request.form['horas']
 
     print(features)
-
-
 
     y_pred = predict_pipeline(features)
 
@@ -380,7 +408,6 @@ def handle_data():
     ####Aquí llamamos a una funcion para insertar los datos en la tabla nlu_hifp
 
 
-
     return {'Predicted value': pred}
 
 
@@ -389,7 +416,6 @@ if __name__ == '__main__':
     # ejecución de la app
 
     ROOT_DIR1 = os.path.dirname(os.path.abspath(__file__))
-
 
     app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG_MODE)
 

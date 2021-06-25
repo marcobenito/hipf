@@ -103,23 +103,23 @@ function showInp(){
 			<!--<input type="image" alt="Salir" src="{{url_for('static', filename='offline_22.png') }}" width="30" height="30">-->
 		</div>
 	</div>
-	
+
 	<div>
             <ul>
                 <li>
-                   <input id="name_ciudad" name="name_ciudad" style="display: none"/>
-					<label for="name">Ciudad:</label>
-						<select id="ciudad" name="ciudad" onchange="showInp()" style="width:40%" class="form-control">
-							<option value="">Elija una Ciudad</option>
-							<option value="0.920">city_103</option>
-							<option value="0.776">city_40</option>
-							<option value="0.624">city_21</option>
-							<option value="0.789">city_115</option>
-							<option value="0.767">city_162</option>
-						</select>
+					<input id="name_ciudad" name="name_ciudad" style="display: none"/>
+                    <label for="name">¿Cuál es su sede?:</label>
+					<select id="ciudad" name="ciudad" style="width:40%" class="form-control">
+
+							{% for i in range(cities|length) %}
+						<option value="{{idh[i]}}" selected>{{cities[i]}}</option>
+							{% endfor %}
+						<option value="">Elija una ciudad</option>
+
+					</select>
                 </li>
                 <li>
-                    <label for="name">Genero:</label>
+                    <label for="name">Indique su género:</label>
 					<select id="sexo" name="sexo" style="width:40%" class="form-control">
 						<option value="">Elija una Genero</option>
 						<option value="Male">Male</option>
@@ -127,7 +127,7 @@ function showInp(){
 					</select>
                 </li>
                 <li>
-                   <label>Experiencia Laboral:</label>
+                   <label>¿Tiene experiencia relevante en el área de Data Science?:</label>
 						<select id="experiencia" name="experiencia" style="width:40%" class="form-control">
 						<option value="">Elija Experiencia</option>
 						<option value="Has relevent experience">Con experiencia</option>
@@ -135,7 +135,7 @@ function showInp(){
 						</select>
                 </li>
                 <li>
-                   <label>Matriculado Universidad:</label>
+                   <label>¿Está actualmente matricualdo en la universidad?:</label>
 					<select id="matricula" name="matricula" style="width:40%" class="form-control">
 						<option value="">Elija matricula</option>
 						<option value="Full time course">Curso Completo</option>
@@ -144,7 +144,7 @@ function showInp(){
 					</select>
                 </li>
                 <li>
-                    <label>Nivel Educación:</label>
+                    <label>¿Cuál es su nivel de educación?:</label>
 					<select id="NivelEdu" name="NivelEdu" style="width:40%" class="form-control">
 						<option value="">Elija Nivel Educativo</option>
 						<option value="Primary School">Primary School</option>
@@ -155,7 +155,7 @@ function showInp(){
 					</select>
                 </li>
                 <li>
-                    <label>Educación:</label>
+                    <label>¿Cuál es su área de educación?:</label>
 						<select id="Educativo" name="Educativo" style="width:40%" class="form-control">
 						<option value="">Elija Educativo</option>
 						<option value="Arts">Arts</option>
@@ -167,7 +167,7 @@ function showInp(){
 					</select>
                 </li>
 				<li>
-                   <label>Años de Experiencia:</label>
+                   <label>¿Cuántos años de experiencia tiene?:</label>
 					<select id="añosexperiencia" name="añosexperiencia" style="width:40%" class="form-control">
 						<option value="">Elija Experiencia años</option>
 						<option value="<1">-1</option>
@@ -194,7 +194,7 @@ function showInp(){
 						<option value=">20">+20</option>
 					</select>
                 </li>
-				 <li>
+				 <!--<li>
                    <label>Tamaño Compañía:</label>
 					<select id="tamaño" name="tamaño" style="width:40%" class="form-control">
 						<option value="">Elija tamaño compañia</option>
@@ -219,9 +219,9 @@ function showInp(){
 						<option value="Pvt Ltd">Pvt Ltd</option>
 						<option value="Other">Other</option>
 					</select>
-                </li>
+                </li>-->
 				<li>
-                   <label>Último nuevo trabajo:</label>
+                   <label>¿Hace cuántos años cambió de trabajo por última vez?:</label>
 						<select id="lastWork" name="lastWork" style="width:40%" class="form-control">
 						<option value="">Elija ultimo trabajo</option>
 						<option value="never">Nunca</option>
@@ -233,43 +233,9 @@ function showInp(){
 						</select>
                 </li>
 				<li>
-                  <label>Horas formación:</label>
-						<select id="horas" name="horas" style="width:40%" class="form-control">
-						<option value="">Elija horas formación</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-						<option value="17">17</option>
-						<option value="18">18</option>
-						<option value="19">19</option>
-						<option value="20">20</option>
-						<option value="21">21</option>
-						<option value="22">22</option>
-						<option value="23">23</option>
-						<option value="24">24</option>
-						<option value="25">25</option>
-						<option value="30">30</option>
-						<option value="35">35</option>
-						<option value="40">40</option>
-						<option value="45">45</option>
-						<option value="50">50</option>
-						<option value="55">55</option>
-						<option value="60">60</option>
-						</select>
-                </li>
+					<label>¿Cuántas horas de formación lleva en su actual empresa? (indique cantidad)</label>
+					<input id="horas" name="horas" style="width:40%" class="form-control" type="number" min="0" value="0">
+				</li>
             </ul>
     </div>
 	

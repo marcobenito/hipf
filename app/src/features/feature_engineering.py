@@ -199,3 +199,37 @@ class Stringer(BaseEstimator, TransformerMixin):
             else:
                 X[col] = str(X[col])
         return X
+
+
+## Función para discretizar la variable índice de desarrollo ciudad en buckets
+def buckets_numericos(x, limits = [0.5, 0.6, 0.7, 0.8, 0.9, 1]):
+    for i in limits:
+        if float(x) < i:
+            return '<' + str(i)
+    if float(x) > limits[-1]:
+        return '>' + str(limits[-1])
+
+
+## Función para discretizar la variable tamaño de compañía en buckets
+def buckets_tam_compania(x):
+    tam_c = {'<10': 'S', '10/49': 'S',
+             '50-99': 'M', '100-500': 'M',
+             '500-999': 'M', '1000-4999': 'L',
+             '5000-9999': 'L', '10000+': 'L'}
+
+    if str(x) != 'nan':
+        return tam_c[x]
+    else:
+        return np.nan
+
+## Función para discretizar la variable experiencia en buckets
+def buckets_experiencia(x, limits = [10, 20]):
+    try:
+        x = int(x)
+        for i in limits:
+            if x <= i:
+                return '<' + str(i)
+    except:
+        if x == 'nan':
+            return np.nan
+        return x

@@ -93,3 +93,13 @@ body {
     text-align:center;
     margin:5% 7.5% 0% 7.5%;
 }
+
+/*#conf-matrix{
+    position:relative;
+    height:300px;
+    width:500px;
+}
+*/
+h2{
+    font-size:18px;
+}

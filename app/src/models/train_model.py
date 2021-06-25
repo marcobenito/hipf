@@ -2,6 +2,7 @@ import os
 import pickle
 
 import joblib
+import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler
 
@@ -19,7 +20,6 @@ import time
 from ..evaluation.evaluate_model import evaluate_model
 from ..features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
 from ..features.pipeline import buckets_experiencia, combine_features
-
 
 def training_pipeline(path, model_info_db_name='hipf_db'):
     """
@@ -84,9 +84,6 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
         ('categorical_pipeline', cat_pipeline)
     ])
 
-
-
-
     # Aplicamos el pipeline de transformación
     pipe = full_pipeline.fit(X_train_res)
     X_train1 = pipe.transform(X_train_res)
@@ -104,9 +101,6 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     print('------>Los mejores parametros',params)
 
 ##/*****************Probamos a meter los el modelo en el pipeine *****************/
-
-
-
 
     print('------>Fit del modelo  XGBRFClassifier')
     clf = XGBRFClassifier(**params)
@@ -255,3 +249,22 @@ def load_model_config(db_name):
     db = client.get_database(db_name)
     query = Query(db, selector={'_id': {'$eq': 'model_config'}})
     return query()['docs'][0]
+
+
+def load_model_metrics(db_name, name=False):
+    """
+        Función para cargar las métrics del modelo en producción desde IBM Cloudant.
+
+        Args:
+            db_name (str):  Nombre de la base de datos.
+
+        Returns:
+            dict. Documento con la configuración del modelo.
+    """
+    db = client.get_database(db_name)
+    query = Query(db, selector={'status': {'$eq': 'in_production'}})
+    res = query()['docs']
+    df = pd.DataFrame(res[0]['model_metrics'])
+    if name:
+        return df, res[0]['model_used']
+    return df

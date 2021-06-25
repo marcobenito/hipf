@@ -86,7 +86,7 @@ def select_id():
     con = sql_connection()
     cursorObj = con.cursor()
 
-    cursorObj.execute('SELECT  ifnull(max(empleado_id),3381) from Predict_hifp')
+    cursorObj.execute('SELECT  ifnull(max(empleado_id),33381) from Predict_hifp')
 
     rows = cursorObj.fetchall()
 
@@ -96,3 +96,18 @@ def select_id():
     con.close()
 
     return variable
+
+def select_table():
+    import pandas as pd
+    con = sql_connection()
+    cursorObj = con.cursor()
+
+    cursorObj.execute('SELECT  * from Predict_hifp')
+
+    rows = cursorObj.fetchall()
+    columns = [description[0] for description in cursorObj.description]
+
+    df = pd.DataFrame(rows)
+    df.columns = columns
+
+    return df

@@ -217,27 +217,14 @@ def plot_feature_vs_target(df, column, vals=None):
     #fig.show()
     return fig
 
-def id_ciudad(x):
-    if x<0.5:
-        return '<0.5'
-    elif x<0.6:
-        return '<0.6'
-    elif x<0.7:
-        return '<0.7'
-    elif x<0.8:
-        return '<0.8'
-    elif x<0.9:
-        return '<0.9'
-    else:
-        return '<1'
-
+data = pd.read_csv('app/data/ds_job.csv')
+from ..features.feature_engineering import buckets_numericos, buckets_experiencia, buckets_tam_compania
 def df_for_plotting1():
-    data = pd.read_csv('app/data/ds_job.csv')
     # Preparamos un nuevo diccionario con los DF para plottear, creando cada
     # columna individualmente
     new_data = {}
     test = data[['indice_desarrollo_ciudad', 'target']]
-    test['id_desarrollo_ciudad'] = test.indice_desarrollo_ciudad.apply(id_ciudad)
+    test['id_desarrollo_ciudad'] = test.indice_desarrollo_ciudad.apply(buckets_numericos)
     test['id_desarrollo_ciudad'] = test['id_desarrollo_ciudad'].apply(lambda x: str(x))
     test = test.drop('indice_desarrollo_ciudad', axis=1)
     new_data['id_desarrollo_ciudad'] = test
@@ -277,6 +264,16 @@ def df_for_plotting1():
 
     return new_data
 
+
+def df_for_plotting():
+    df = data.drop(columns=['ciudad', 'empleado_id'])
+    df['indice_desarrollo_ciudad'] = df['indice_desarrollo_ciudad'].apply(buckets_numericos)
+    df['horas_formacion'] = df['horas_formacion'].apply(lambda x: buckets_numericos(x, limits=[10, 20, 50, 100]))
+    df['experiencia'] = df['experiencia'].apply(buckets_experiencia)
+    #df['tamano_compania'] = df['tamano_compania'].apply(buckets_tam_compania)
+    return df
+
+
 def plot_roc(val):
     name = 'model_roc_' + val + '.pkl'
     path = 'app/dashboard/objects/' + name
@@ -295,3 +292,21 @@ def plot_roc(val):
         x=1
     ))
     return fig
+
+def read_input():
+    vars = {}
+    with open('input.txt', 'r') as f:
+        #input_data = f.read()
+        for line in f:
+            # Si la línea empieza por almohadilla lo consideramos comentario
+            # Si no, separamos por el signo = y guardamos el texto a la izquierda del =
+            #   como key del diccionario y el texto de la derecha como value
+            if line.strip()[0] != '#':
+                vals = line.strip().split('=')
+                # En caso de que haya comas separando en el value, lo cargamos como lista
+                if ',' not in vals[1]:
+                    vars[vals[0].strip()] = vals[1].strip()
+                else:
+                    lista = vals[1].split(',')
+                    vars[vals[0].strip()] = [x.strip() for x in lista]
+        return vars
