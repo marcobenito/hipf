@@ -2,38 +2,47 @@
   "services": {
     "cloudantNoSQLDB": [
       {
-        "name": "Cloudant-HIPF",
+        "name": "cloudant-ia-online-bbn-group02",
         "label": "cloudantNoSQLDB",
         "plan": "Shared",
-        "credentials": {
-        "apikey": "SeIDcR3g18alY7UNidB3_P3qaYcxotk8XrPWMQuGoKys",
-        "host": "0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix.cloudantnosqldb.appdomain.cloud",
-        "iam_apikey_description": "Auto-generated for key c8834989-a5f7-425b-b864-6893874fc96a",
-        "iam_apikey_name": "Credenciales de servicio-HIPF",
-        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-2bf2beff-d526-494c-9685-0302805001f9",
-        "url": "https://0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix.cloudantnosqldb.appdomain.cloud",
-        "username": "0fdd4016-c6b1-4958-ad5a-b5d9adc10355-bluemix"
-        }
+        "credentials":
+			{
+			  "apikey": "bwm83OTe-HkFbZCWDo5v9QHaSQjWO3rl3NSL3UOO4dO7",
+			  "host": "ca6f9943-878f-49dc-a09b-bce8996f7a9e-bluemix.cloudantnosqldb.appdomain.cloud",
+			  "iam_apikey_description": "Auto-generated for key c0ba6fa7-1d0e-467c-a0bd-12e49fc7e0e5",
+			  "iam_apikey_name": "Cred1",
+			  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+			  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/2eac41e3a6e644c4af2df283298f875a::serviceid:ServiceId-e08e498e-ad5a-4b67-bea6-38ec8a5cf33b",
+			  "password": "5aea80a5e393bee67dbd0e76588cefd4",
+			  "port": 443,
+			  "url": "https://apikey-v2-8746zp872okbhwvddtaqbx13vsocl26ke85h06i565k:5aea80a5e393bee67dbd0e76588cefd4@ca6f9943-878f-49dc-a09b-bce8996f7a9e-bluemix.cloudantnosqldb.appdomain.cloud",
+			  "username": "apikey-v2-8746zp872okbhwvddtaqbx13vsocl26ke85h06i565k"
+			}
       }
     ],
     "cloud-object-storage": [
         {
               "credentials":
-           {
-              "apikey": "egah9Y-EN9Qdit5BFeI-d7y8mJLFpzzgiyTLvr7F-DuF", "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
-              "iam_apikey_description": "Auto-generated for key 023f5623-8cc9-4bcb-966c-4615278bc416",
-              "iam_apikey_name": "Cred1",
-              "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-              "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-bcb49478-8ce3-42ec-9664-f7fc0db469b1",
-              "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/b11e3f1fd7014c0ea8313f6f257f4c86:47c0b6c6-ce69-4722-8d25-5663c953073d::"
-            },
+
+			  {
+				  "apikey": "iN4qmGejxamfOCOwEhemHFzbx7yaMQGS6HNXWt6Sl4_2",
+				  "cos_hmac_keys": {
+					"access_key_id": "a96600ed5e1f4c29a04cd7151310a2a0",
+					"secret_access_key": "40581bec4372fbe72c5c99eb25786f1df31e64ee65768425"
+				  },
+				  "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+				  "iam_apikey_description": "Auto-generated for key a96600ed-5e1f-4c29-a04c-d7151310a2a0",
+				  "iam_apikey_name": "wdp-writer",
+				  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+				  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/2eac41e3a6e644c4af2df283298f875a::serviceid:ServiceId-540795e0-7833-4467-810f-85df7cb91e8d",
+				  "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/2eac41e3a6e644c4af2df283298f875a:fc9e9d7d-c9d6-4fe4-85d0-a6cc3dfe1651::"
+				},
             "syslog_drain_url": null,
             "volume_mounts": [],
             "label": "cloud-object-storage",
             "provider": null,
             "plan": "Lite",
-            "name": "Cos-HIFP",
+            "name": "cos-ia-online-bbn-group02",
             "tags": [
                 "Lite",
                 "storage",
