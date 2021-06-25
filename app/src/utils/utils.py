@@ -126,7 +126,7 @@ class IBMCOS:
                                              config=Config(signature_version="oauth"),
                                              endpoint_url=endpoint_url)
 
-    def save_object_in_cos(self, obj, name, timestamp, bucket_name='models-hifp'):
+    def save_object_in_cos(self, obj, name, timestamp, bucket_name='hipf-models'):
         """
             Función para guardar objeto en IBM COS.
 
@@ -154,7 +154,7 @@ class IBMCOS:
         except Exception as e:
             print("Unable to create object: {0}".format(e))
 
-    def get_object_in_cos(self, key, bucket_name='models-hifp'):
+    def get_object_in_cos(self, key, bucket_name='hipf-models'):
         """
             Función para obtener un objeto de IBM COS.
 

@@ -2,47 +2,40 @@
   "services": {
     "cloudantNoSQLDB": [
       {
-        "name": "cloudant-ia-online-bbn-group02",
+        "name": "Cloudant-HIPF",
         "label": "cloudantNoSQLDB",
         "plan": "Shared",
         "credentials":
-			{
-			  "apikey": "bwm83OTe-HkFbZCWDo5v9QHaSQjWO3rl3NSL3UOO4dO7",
-			  "host": "ca6f9943-878f-49dc-a09b-bce8996f7a9e-bluemix.cloudantnosqldb.appdomain.cloud",
-			  "iam_apikey_description": "Auto-generated for key c0ba6fa7-1d0e-467c-a0bd-12e49fc7e0e5",
-			  "iam_apikey_name": "Cred1",
-			  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-			  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/2eac41e3a6e644c4af2df283298f875a::serviceid:ServiceId-e08e498e-ad5a-4b67-bea6-38ec8a5cf33b",
-			  "password": "5aea80a5e393bee67dbd0e76588cefd4",
-			  "port": 443,
-			  "url": "https://apikey-v2-8746zp872okbhwvddtaqbx13vsocl26ke85h06i565k:5aea80a5e393bee67dbd0e76588cefd4@ca6f9943-878f-49dc-a09b-bce8996f7a9e-bluemix.cloudantnosqldb.appdomain.cloud",
-			  "username": "apikey-v2-8746zp872okbhwvddtaqbx13vsocl26ke85h06i565k"
-			}
+            {
+              "apikey": "RiYFdzZvyhkyCbBs0i6e9H51UYcWjOaVWsT0qgeejWRa",
+              "host": "4c39cfbd-95e7-4232-861d-d0875e7e94b5-bluemix.cloudantnosqldb.appdomain.cloud",
+              "iam_apikey_description": "Auto-generated for key 2855d33f-8117-4d00-a8bb-10f9d720d917",
+              "iam_apikey_name": "Credenciales de servicio-1",
+              "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+              "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-660c3823-ee75-46c9-b0b0-400607a6af4b",
+              "url": "https://4c39cfbd-95e7-4232-861d-d0875e7e94b5-bluemix.cloudantnosqldb.appdomain.cloud",
+              "username": "4c39cfbd-95e7-4232-861d-d0875e7e94b5-bluemix"
+            }
       }
     ],
     "cloud-object-storage": [
         {
               "credentials":
-
-			  {
-				  "apikey": "iN4qmGejxamfOCOwEhemHFzbx7yaMQGS6HNXWt6Sl4_2",
-				  "cos_hmac_keys": {
-					"access_key_id": "a96600ed5e1f4c29a04cd7151310a2a0",
-					"secret_access_key": "40581bec4372fbe72c5c99eb25786f1df31e64ee65768425"
-				  },
-				  "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
-				  "iam_apikey_description": "Auto-generated for key a96600ed-5e1f-4c29-a04c-d7151310a2a0",
-				  "iam_apikey_name": "wdp-writer",
-				  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-				  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/2eac41e3a6e644c4af2df283298f875a::serviceid:ServiceId-540795e0-7833-4467-810f-85df7cb91e8d",
-				  "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/2eac41e3a6e644c4af2df283298f875a:fc9e9d7d-c9d6-4fe4-85d0-a6cc3dfe1651::"
-				},
+                {
+                  "apikey": "SQn6GaE1uZJbYHqC68jFJNxdnuMP_2ywVFTWZy2-_9mn",
+                  "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+                  "iam_apikey_description": "Auto-generated for key 299df96e-7e10-4b29-87eb-e7e09fe516f0",
+                  "iam_apikey_name": "Cred-1",
+                  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+                  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/b11e3f1fd7014c0ea8313f6f257f4c86::serviceid:ServiceId-68b2f3fe-a885-4ec8-aac4-ee8f3d7bcaa2",
+                  "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/b11e3f1fd7014c0ea8313f6f257f4c86:b4b32620-bc13-4da4-8fa4-fe33f5dfd7fe::"
+                },
             "syslog_drain_url": null,
             "volume_mounts": [],
             "label": "cloud-object-storage",
             "provider": null,
             "plan": "Lite",
-            "name": "cos-ia-online-bbn-group02",
+            "name": "cos-HIFP",
             "tags": [
                 "Lite",
                 "storage",

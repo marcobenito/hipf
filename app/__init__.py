@@ -43,7 +43,7 @@ if 'VCAP_SERVICES' in os.environ:
     # se busca el servicio de IBM COS (debe estar conectado en IBM Cloud a nuestra app)
     if 'cloud-object-storage' in vcap:
             creds = vcap['cloud-object-storage'][0]['credentials']
-            #endpoint_url = COS_ENDPOINT
+            ##endpoint_url = COS_ENDPOINT
             endpoint_url = "https://s3.ap.cloud-object-storage.appdomain.cloud/"
 
             ibm_service_instance_id = creds['resource_instance_id']
