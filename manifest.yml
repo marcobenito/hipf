@@ -1,6 +1,6 @@
 ---
 applications:
-- name: ProyectoHIPF
+- name: ProyectoHIFP
   random-route: true
-  memory: 2048M
+  memory: 256M
   disk_quota: 2048M
