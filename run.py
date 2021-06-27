@@ -411,7 +411,7 @@ def handle_data():
     # con el string de comentario incluimos la llamada a la funcion de analisis de sentimiento
     natural_language_understanding = iniciar_nlu()
     #score_nlu = pd.Series([0.19,-0.3,-0.5,0.21])
-    score_nlu = [extrae(x, 0, natural_language_understanding)    for x in pdnlu[1:5]]
+    score_nlu = [extrae(x, 0, natural_language_understanding) for x in pdnlu[1:5]]
 
     print(score_nlu)
     for i,scores in enumerate(score_nlu):
