@@ -1,27 +1,93 @@
-
+<!-- templates/profile.html -->
 {% block content %}
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <!--<link rel="stylesheet" type="text/css" href="../static/Dashboard.css">-->
-        <title>train </title>
-    </head>
-	
-<!--<style>
-.btn{margin:16px 6px 2px 0;color:#ffffff;font-weight:bold;display:inline-block;padding:6px 12px;font-size:16px;text-align:center;cursor:pointer;outline:0;float:left;background-color:#55acee;}
-.btn a {color:#ffffff;text-decoration:none;}
+<script type="text/javascript" src="{{url_for('static', filename='jquery.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style_formu.css') }}">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+<style>
+  /* Span style */
+	#text {
+    color: #4DAF74;
+}
+*{box-sizing:border-box;}
+
+body{
+	width:1200px;
+	padding:5px;
+	border-radius:10px;
+	margin:auto;
+	background-color:#F7F9F9;
+}
+
+body label{
+	width:800px;
+	font-weight:bold;
+	display:inline-block;
+}
+
+body input[type="text"],
+body input[type="email"]{
+	width:180px;
+	padding:3px 10px;
+	border:1px solid #f6f6f6;
+	border-radius:3px;
+	background-color:#E3F389;
+	margin:8px 0;
+	display:inline-block;
+}
+
+body input[type="submit"]{
+	width:100%;
+	padding:8px 16px;
+	margin-top:32px;
+	border:1px solid #000;
+	border-radius:5px;
+	display:block;
+	color:#fff;
+	background-color:#E3F389;
+} 
+
+body input[type="submit"]:hover{
+	cursor:pointer;
+}
+
+textarea{
+	width:80%;
+	height:100px;
+	border:1px solid #f6f6f6;
+	border-radius:3px;
+	background-color:#fff;
+	margin:8px 0;
+	/*resize: vertical | horizontal | none | both*/
+	resize:none;
+	display:block;
+}
 </style>
--->
+<script type="text/javascript">
 
-<!--<div class="btn">
-	<button type="button">Dashboard</button>
-</div>-->
+
+</script>
 <body>
-<div id="wrapper">
-	
-Estamos dentro de train
-</div>
-
+	<div class="container">
+		<div class="">
+		<div></div>
+			<div>
+				  <center><h1>Encuesta de Satisfacción <span id="text" style=" color: #4DAF74 !important;">HIPF</span></h1></center> 
+			</div>
+		</div>
+		<div style="text-align:right !important;align=middle">
+			 <a href="{{ url_for('logintrain') }}" src="{{url_for('static', filename='offline_22.png') }}"><img src="{{url_for('static', filename='offline_22.png') }}"/></a>
+			<!--<input type="image" alt="Salir" src="{{url_for('static', filename='offline_22.png') }}" width="30" height="30">-->
+		</div>
+	</div>
+	<div>	
+		<h1 class="title"><center>
+		  {{ name }}
+		</h1></center>	
+	</div>	
 </body>
+
 </html>
+
 {% endblock %}
