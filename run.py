@@ -267,37 +267,45 @@ def update_bar_chart_1(val):
     return fig
 
 
-# @dash_app.callback(
-#     Output("bar-graph-nlu", "figure"),
-#     [Input('submit-val', 'n_clicks')],
-#
-#     )
-# def update_nlu(n_clicks, value):
-#     # data = pd.read_csv('app/data/new_data.csv')
-#     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-#     print('hola88')
-#     if 'n_clicks' in changed_id:
-#         data = select_table_pred()
-#         ciudad = data[data['empleado_id'] == value]['ciudad']
-#         new_data = data[data['ciudad'] == ciudad]
-#         emp = new_data['empleado_id'].values
-#         new_data.index = emp
-#         emp.remove(value)
-#         empleados = [value]
-#         if len(emp) == 0:
-#             pass
-#         elif len(emp) > 3:
-#             empleados.append(random.sample(emp, 3))
-#         else:
-#             empleados.append(emp)
-#
-#         fig = plot_nlu(empleados, ciudad)
-#
-#         return fig
-#
-#     else:
-#         fig = plot_nlu()
-#         return fig
+@dash_app.callback(
+    Output('bar-graph-nlu', 'figure'),
+    [Input('buscar-id', 'n_clicks')],
+    [State('input-on-submit', 'value')]
+)
+def update_nlu(n_clicks, value):
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if 'n_clicks' in changed_id:
+        print(value)
+        value = int(value)
+        print(value)
+        data = select_table_pred()
+        data.index = data.empleado_id.values
+        ciudad = data.loc[value]['ciudad']
+        print('ciudad: ', ciudad)
+
+        new_data = data[data['ciudad'] == ciudad]
+        print(new_data)
+        emp = new_data['empleado_id'].values.tolist()
+        print('emp: ', emp)
+        new_data.index = emp
+        print(new_data)
+        emp.remove(value)
+        print('new emp: ', emp)
+        empleados = [value]
+        if len(emp) == 0:
+            pass
+        elif len(emp) > 3:
+            empleados += random.sample(emp, 3)
+        else:
+            empleados = empleados + emp
+            print(empleados)
+
+        fig = plot_nlu(empleados[::-1], ciudad)
+
+        return fig
+    else:
+        fig = plot_nlu()
+        return fig
 
 
 

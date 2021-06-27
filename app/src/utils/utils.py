@@ -383,9 +383,16 @@ def plot_nlu(empleados=None, ciudad=None):
     ])
     if ciudad is not None:
         fig2.update_layout(
-            title='Score de sentimiento en función de distintos aspectos de empleados de la sede de ' + ciudad)
+            title='Score de sentimiento en función de distintos aspectos de empleados de la sede de ' + ciudad,
+            xaxis_title="Score",
+            yaxis_title="ID empleado",
+        )
+
     else:
-        fig2.update_layout(title='Score de sentimiento de empleados en función de distintos aspectos')
+        fig2.update_layout(title='Score de sentimiento de empleados en función de distintos aspectos',
+                           xaxis_title="Score",
+                           yaxis_title="ID empleado",
+                           )
     fig2.update_xaxes(range=[-1, 1])
     fig2.update_yaxes(
         tickvals=list(range(len(dftemp))),

@@ -36,26 +36,7 @@ def dashboard_layout(dash_app):
         ])
 
 def report_layout():
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-    data = pd.read_csv('app/data/ds_job.csv')[:50]
-    data_1 = pd.read_csv('app/data/new_data.csv')
-    data = data[['empleado_id', 'ciudad', 'genero', 'experiencia', 'universidad_matriculado', 'target']]
-    data_plot = df_for_plotting1()
-    fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    print(data_1)
-    fig2 = plot_nlu()
-    fig1 = px.scatter_geo(data_1, lat='latitude', lon='longitude', color='ciudad_1', size='target')
-    fig1.update_layout(legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=0.8
-    ))
+
     layout = html.Div([
         html.Div([
             dcc.RadioItems(
@@ -74,9 +55,14 @@ def report_layout():
 
     html.Div([
         html.Div([
+            html.Div([
+                html.H2('Buscar por ID de empleado  ', style={'display': 'inline-block'}),
+                dcc.Input(id='input-on-submit', type='text'),
+                html.Button('Buscar', id='buscar-id', n_clicks=0)
+            ], style={'textAlign': 'left'}),
             dcc.Graph(
-                id='example-graph-2',
-                figure=fig2
+                id='bar-graph-nlu',
+                #figure=fig2
             ),
         ])
     ], className='one-row')])
@@ -238,7 +224,6 @@ def layout_general():
 def layout_map():
     data = select_table_pred()
     data = df_for_map(data)
-    data_1 = pd.read_csv('app/data/new_data.csv')
     fig1 = px.scatter_geo(data, lat='latitude', lon='longitude', color='ciudad', size='N')
     fig1.update_layout(legend=dict(
         orientation="h",
