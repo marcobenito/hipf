@@ -73,13 +73,10 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
 def load_model(name, bucket_name='hipf-models-2'):
     """
          Función para cargar el modelo en IBM COS
-
          Args:
              name (str):  Nombre de objeto en COS a cargar.
-
          Kwargs:
              bucket_name (str):  depósito de IBM COS a usar.
-
         Returns:
             obj. Objeto descargado.
      """
@@ -89,13 +86,10 @@ def load_model(name, bucket_name='hipf-models-2'):
 def get_best_model_info(db_name):
     """
          Función para cargar la info del modelo de IBM Cloudant
-
          Args:
              db_name (str):  base de datos a usar.
-
          Kwargs:
              bucket_name (str):  depósito de IBM COS a usar.
-
         Returns:
             dict. Info del modelo.
      """
@@ -107,10 +101,8 @@ def get_best_model_info(db_name):
 def load_model_config(db_name):
     """
         Función para cargar la info del modelo desde IBM Cloudant.
-
         Args:
             db_name (str):  Nombre de la base de datos.
-
         Returns:
             dict. Documento con la configuración del modelo.
     """
@@ -179,7 +171,6 @@ def extrae(comentario, tipo_res,    natural_language_understanding ):
     jsonlist = pd.DataFrame({'label': [respuesta["document"]["label"]], 'score': [respuesta["document"]["score"]]})
     print(jsonlist)
     if tipo_res == 0:
-        return np.array(jsonlist.score)
+        return np.float(jsonlist.score)
     elif tipo_res == 1:
         return jsonlist
-

@@ -15,11 +15,12 @@ from typing import Any, Callable, TypeVar, cast
 from.utils_co import latitude, longitude
 from app.src.data.conectBBDD import select_table_pred, select_table
 
+from.utils_co import latitude, longitude
+
 
 def random_seed(seed_value: int) -> None:
     """
     Random Seeds Numpy, Random and Torch libraries
-
     Args:
         seed_value (int): Number for seeding
     """
@@ -62,7 +63,6 @@ class DocumentDB:
     def __init__(self, username, api_key):
         """
             Constructor de la conexión a IBM cloudant
-
             Args:
                username (str): usuario.
                apikey (str): API key.
@@ -73,10 +73,8 @@ class DocumentDB:
     def get_database(self, db_name):
         """
             Función para obtener la base de datos elegida.
-
             Args:
                db_name (str):  Nombre de la base de datos.
-
             Returns:
                Database. Conexión a la base de datos elegida.
         """
@@ -85,10 +83,8 @@ class DocumentDB:
     def database_exists(self, db_name):
         """
             Función para comprobar si existe la base de datos.
-
             Args:
                db_name (str):  Nombre de la base de datos.
-
             Returns:
                boolean. Existencia o no de la base de datos.
         """
@@ -97,7 +93,6 @@ class DocumentDB:
     def create_document(self, db, document_dict):
         """
             Función para crear un documento en la base de datos
-
             Args:
                db (str):  Conexión a una base de datos.
                document_dict (dict):  Documento a insertar.
@@ -113,7 +108,6 @@ class IBMCOS:
     def __init__(self, ibm_api_key_id, ibm_service_instance_id, ibm_auth_endpoint, endpoint_url):
         """
             Constructor de la conexión a IBM COS
-
             Args:
                ibm_api_key_id (str): API key.
                ibm_service_instance_id (str): Service Instance ID.
@@ -132,12 +126,10 @@ class IBMCOS:
     def save_object_in_cos(self, obj, name, timestamp, bucket_name='hipf-models-2'):
         """
             Función para guardar objeto en IBM COS.
-
             Args:
                obj:  Objeto a guardar.
                name (str):  Nombre del objeto a guardar.
                timestamp (float): Segundos transcurridos.
-
             Kwargs:
                 bucket_name (str): depósito de COS elegido.
         """
@@ -160,13 +152,10 @@ class IBMCOS:
     def get_object_in_cos(self, key, bucket_name='hipf-models-2'):
         """
             Función para obtener un objeto de IBM COS.
-
             Args:
                key (str):  Nombre del objeto a obtener de COS.
-
             Kwargs:
                 bucket_name (str): depósito de COS elegido.
-
             Returns:
                obj. Objeto descargado.
         """
@@ -332,6 +321,50 @@ def df_for_map(data):
     data.columns = ['ciudad', 'latitude', 'longitude', 'N']
     return data
 
+def read_input():
+    vars = {}
+    with open('input.txt', 'r') as f:
+        #input_data = f.read()
+        for line in f:
+            # Si la línea empieza por almohadilla lo consideramos comentario
+            # Si no, separamos por el signo = y guardamos el texto a la izquierda del =
+            #   como key del diccionario y el texto de la derecha como value
+            if line.strip()[0] != '#':
+                vals = line.strip().split('=')
+                # En caso de que haya comas separando en el value, lo cargamos como lista
+                if ',' not in vals[1]:
+                    vars[vals[0].strip()] = vals[1].strip()
+                else:
+                    lista = vals[1].split(',')
+                    vars[vals[0].strip()] = [x.strip() for x in lista]
+        return vars
+
+def plot_predictions(data, col):
+    data = data[[col, 'target', 'empleado_id']]
+    data1 = data[data['target'] == 1.0]
+    data2 = data[data['target'] == 0.0]
+    data1 = data1.groupby([col, 'target']).count().reset_index()
+    data2 = data2.groupby([col, 'target']).count().reset_index()
+    data3 = pd.concat([data1, data2])
+    data3.columns = [col, 'prediction', 'N']
+    data3.prediction = data3.prediction.map({0.0: 'Negative', 1.0: 'Positive'})
+    fig = px.bar(data3, x=col, y='N', color="prediction", barmode='group',
+                 color_discrete_map={
+                     'Negative': 'rgb(55, 83, 109)',
+                     'Positive': 'rgb(26, 118, 255)'
+                 }
+                 )
+    return fig
+
+def df_for_map(data):
+    data = data[['ciudad', 'target', 'empleado_id']]
+    data = data[data['target'] == 1.0]
+    data['lat'] = data['ciudad'].apply(latitude)
+    data['lon'] = data['ciudad'].apply(longitude)
+    data = data.drop(['target'], axis=1).groupby(['ciudad', 'lat', 'lon']).count().reset_index()
+    data.columns = ['ciudad', 'latitude', 'longitude', 'N']
+    return data
+
 def plot_nlu(empleados=None, ciudad=None):
     query = 'SELECT * from nlu_hifp'
     dftemp = pd.DataFrame(select_table(query))[[0, 5, 6, 7, 8]]
@@ -355,9 +388,10 @@ def plot_nlu(empleados=None, ciudad=None):
         fig2.update_layout(title='Score de sentimiento de empleados en función de distintos aspectos')
     fig2.update_xaxes(range=[-1, 1])
     fig2.update_yaxes(
-        tickvals=range(len(dftemp)),
+        tickvals=list(range(len(dftemp))),
         ticktext=dftemp['empleado_id'].values
     )
+    return fig2
 
 def read_input():
     vars = {}

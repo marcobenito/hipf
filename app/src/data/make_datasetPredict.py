@@ -8,14 +8,11 @@ def make_dataset(data, model_info):
     """
         Función que permite crear el dataset usado para el entrenamiento
         del modelo.
-
         Args:
            data (List):  Lista con la observación llegada por request.
            model_info (dict):  Información del modelo en producción.
-
         Kwargs:
            model_type (str): tipo de modelo usado.
-
         Returns:
            DataFrame. Dataset a inferir.
     """
@@ -40,10 +37,8 @@ def get_raw_data_from_request(data):
 
     """
         Función para obtener nuevas observaciones desde request
-
         Args:
            data (List):  Lista con la observación llegada por request.
-
         Returns:
            DataFrame. Dataset con los datos de entrada.
     """
@@ -56,12 +51,10 @@ def transform_data(data_df, model_info):
     """
         Función que permite realizar las primeras tareas de transformación
         de los datos de entrada.
-
         Args:
             data_df (DataFrame):  Dataset de entrada.
             model_info (dict):  Información del modelo en producción.
             cols_to_remove (list): Columnas a retirar.
-
         Returns:
            DataFrame. Dataset transformado.
     """
@@ -93,11 +86,9 @@ def pre_train_data_prep(data_df, model_info):
     """
         Función que realiza las últimas transformaciones sobre los datos
         antes del entrenamiento (imputación de nulos)
-
         Args:
             data_df (DataFrame):  Dataset de entrada.
             model_info (dict):  Información del modelo en producción.
-
         Returns:
             DataFrame. Datasets de salida.
     """
@@ -113,11 +104,9 @@ def input_missing_values(data_df, key):
 
     """
         Función para la imputación de nulos
-
         Args:
             data_df (DataFrame):  Dataset de entrada.
             key (str):  Nombre del objeto imputador en COS.
-
         Returns:
             DataFrame. Datasets de salida.
     """
@@ -133,16 +122,9 @@ def input_missing_values(data_df, key):
 def remove_unwanted_columns(df, cols_to_remove):
     """
         Función para quitar variables innecesarias
-
         Args:
            df (DataFrame):  Dataset.
-
         Returns:
            DataFrame. Dataset.
     """
     return df.drop(columns=cols_to_remove)
-
-
-
-
-

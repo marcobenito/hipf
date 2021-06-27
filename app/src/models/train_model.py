@@ -25,10 +25,8 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
     """
         Función para gestionar el pipeline completo de entrenamiento
         del modelo.
-
         Args:
             path (str):  Ruta hacia los datos.
-
         Kwargs:
             model_info_db_name (str):  base de datos a usar para almacenar
             la info del modelo.
@@ -140,12 +138,10 @@ def training_pipeline(path, model_info_db_name='hipf_db'):
 def save_model(obj, name, timestamp, bucket_name='cos-ia-online-bbn-group02'):
     """
         Función para guardar el modelo en IBM COS
-
         Args:
             obj (sklearn-object): Objeto de modelo entrenado.
             name (str):  Nombre de objeto a usar en el guardado.
             timestamp (float):  Representación temporal en segundos.
-
         Kwargs:
             bucket_name (str):  depósito de IBM COS a usar.
     """
@@ -157,11 +153,9 @@ def save_model(obj, name, timestamp, bucket_name='cos-ia-online-bbn-group02'):
 def save_model_info(db_name, metrics_dict):
     """
         Función para guardar la info del modelo en IBM Cloudant
-
         Args:
             db_name (str):  Nombre de la base de datos.
             metrics_dict (dict):  Info del modelo.
-
         Returns:
             boolean. Comprobación de si el documento se ha creado.
     """
@@ -174,7 +168,6 @@ def save_model_info(db_name, metrics_dict):
 def put_best_model_in_production(model_metrics, db_name):
     """
         Función para poner el mejor modelo en producción.
-
         Args:
             model_metrics (dict):  Info del modelo.
             db_name (str):  Nombre de la base de datos.
@@ -211,11 +204,9 @@ def put_best_model_in_production(model_metrics, db_name):
 def get_best_model(model_metrics1, model_metrics2):
     """
         Función para comparar modelos.
-
         Args:
             model_metrics1 (dict):  Info del primer modelo.
             model_metrics2 (str):  Info del segundo modelo.
-
         Returns:
             str, str. Ids del mejor y peor modelo en la comparación.
     """
@@ -239,16 +230,31 @@ def get_best_model(model_metrics1, model_metrics2):
 def load_model_config(db_name):
     """
         Función para cargar la info del modelo desde IBM Cloudant.
-
         Args:
             db_name (str):  Nombre de la base de datos.
-
         Returns:
             dict. Documento con la configuración del modelo.
     """
     db = client.get_database(db_name)
     query = Query(db, selector={'_id': {'$eq': 'model_config'}})
     return query()['docs'][0]
+
+
+def load_model_metrics(db_name, name=False):
+    """
+        Función para cargar las métrics del modelo en producción desde IBM Cloudant.
+        Args:
+            db_name (str):  Nombre de la base de datos.
+        Returns:
+            dict. Documento con la configuración del modelo.
+    """
+    db = client.get_database(db_name)
+    query = Query(db, selector={'status': {'$eq': 'in_production'}})
+    res = query()['docs']
+    df = pd.DataFrame(res[0]['model_metrics'])
+    if name:
+        return df, res[0]['model_used']
+    return df
 
 
 def load_model_metrics(db_name, name=False):

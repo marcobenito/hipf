@@ -34,7 +34,6 @@ def combine_features(data, col1, col2, new_col_name, f1=None, f2=None):
     new_col_name (str): name for the new variable
     f1 (str) optional: optional function to apply to the first column
     f2 (str) optional: optional function to apply to the second column
-
     Returns:
     data1 (DataFrame): new dataset with the new variable"""
 

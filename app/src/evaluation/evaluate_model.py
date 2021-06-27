@@ -7,14 +7,12 @@ def evaluate_model(model, X_test, y_test, timestamp, model_name):
     """
         Esta función permite realizar una evaluación del modelo entrenado
         y crear un diccionario con toda la información relevante del mismo
-
         Args:
            model (sklearn-object):  Objecto del modelo entrenado.
            X_test (DataFrame): Variables independientes en test.
            y_test (Series):  Variable dependiente en test.
            timestamp (float):  Representación temporal en segundos.
            model_name (str):  Nombre del modelo
-
         Returns:
            dict. Diccionario con la info del modelo
     """
@@ -26,11 +24,11 @@ def evaluate_model(model, X_test, y_test, timestamp, model_name):
     feature_importance_values = model.feature_importances_
 
     # Nombre de variables
-    #features = list(X_test.columns)
-    
+    # features = list(X_test.columns)
+
     # creación del diccionario de info del modelo
     model_info = {}
-    #fi_df = pd.DataFrame({'feature': features, 'importance': feature_importance_values})
+    # fi_df = pd.DataFrame({'feature': features, 'importance': feature_importance_values})
 
     # info general del modelo
     model_info['_id'] = 'model_' + str(int(timestamp))
@@ -40,7 +38,7 @@ def evaluate_model(model, X_test, y_test, timestamp, model_name):
     model_info['model_used'] = model_name
     # objectos usados en el modelo (encoders, imputer)
     model_info['objects'] = {}
-    model_info['objects']['encoders'] = 'encoded_columns_'+str(int(timestamp))
+    model_info['objects']['encoders'] = 'encoded_columns_' + str(int(timestamp))
     model_info['objects']['imputer'] = 'imputer_' + str(int(timestamp))
     # métricas usadas
     model_info['model_metrics'] = {}
@@ -55,6 +53,4 @@ def evaluate_model(model, X_test, y_test, timestamp, model_name):
     model_info['status'] = "none"
 
     return model_info
-
-
 

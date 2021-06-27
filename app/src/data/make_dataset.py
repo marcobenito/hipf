@@ -13,15 +13,12 @@ def make_dataset(path, timestamp):
     """
         Función que permite crear el dataset usado para el entrenamiento
         del modelo.
-
         Args:
            path (str):  Ruta hacia los datos.
            timestamp (float):  Representación temporal en segundos.
            target (str):  Variable dependiente a usar.
-
         Kwargs:
            model_type (str): tipo de modelo usado.
-
         Returns:
            DataFrame, DataFrame. Datasets de train y test para el modelo.
     """
@@ -55,10 +52,8 @@ def get_raw_data_from_local(path):
 
     """
         Función para obtener los datos originales desde local
-
         Args:
            path (str):  Ruta hacia los datos.
-
         Returns:
            DataFrame. Dataset con los datos de entrada.
     """
@@ -71,10 +66,8 @@ def get_raw_pikle_from_local(path):
 
     """
         Función para obtener el pickle con los mejores parametros
-
         Args:
            path (str):  Ruta hacia los datos.
-
         Returns:
            DataFrame. Dataset con los datos de entrada.
     """
@@ -85,6 +78,3 @@ def get_raw_pikle_from_local(path):
 
 
     return params
-
-
-

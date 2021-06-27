@@ -428,8 +428,7 @@ def handle_data():
     #score_nlu = pd.Series([0.19,-0.3,-0.5,0.21])
     score_nlu = [extrae(x, 0, natural_language_understanding) for x in pdnlu[1:5]]
 
-    for i in score_nlu:
-        print(i[0])
+    print(score_nlu)
     for i,scores in enumerate(score_nlu):
         print("\n### COMENTARIO ", i+1)
         print(pdnlu[i+1])

@@ -8,7 +8,7 @@ import dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
-from app.src.utils.utils import df_for_plotting1, df_for_plotting, df_for_map
+from app.src.utils.utils import df_for_plotting1, df_for_plotting, df_for_map, plot_nlu
 from app.src.models.train_model import load_model_metrics
 from app.src.data.conectBBDD import select_table_pred
 
@@ -47,6 +47,7 @@ def report_layout():
     data_plot = df_for_plotting1()
     fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
     print(data_1)
+    fig2 = plot_nlu()
     fig1 = px.scatter_geo(data_1, lat='latitude', lon='longitude', color='ciudad_1', size='target')
     fig1.update_layout(legend=dict(
         orientation="h",
@@ -75,7 +76,7 @@ def report_layout():
         html.Div([
             dcc.Graph(
                 id='example-graph-2',
-                figure=fig1
+                figure=fig2
             ),
         ])
     ], className='one-row')])
@@ -183,93 +184,6 @@ def layout_general():
     print(data)
 
     fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    data = select_table()
-    data_table = data[['empleado_id', 'ciudad', 'target']]
-    data_chart = data.drop(columns=['target', 'empleado_id', 'horas_formacion',
-                                    'tipo_compania', 'tamano_compania',
-                                    'indice_desarrollo_ciudad'])
-
-    layout = html.Div([
-        html.Div([
-            # dcc.Input(id='input-state', type='text'),
-            # html.Button(id='submit-button-state', n_clicks=0, children='Buscar'),
-            dash_table.DataTable(
-                id='table-pred',
-                columns=[
-                    {"name": 'ID empleado', "id": 'empleado_id', 'type': 'numeric'},
-                    {"name": 'Ciudad', "id": 'ciudad', 'type': 'text'},
-                    {"name": 'Predicción', "id": 'target', 'type': 'numeric'},
-                         ],
-                filter_action='native',
-                data=data_table.to_dict('records'),
-                # columns=[],
-
-                fixed_columns={'headers': True, 'data': 1},
-                fixed_rows={'headers': True},
-                style_cell={'textAlign': 'left'},
-                style_table={'height': '400px', 'width': '100%'},
-                style_data={
-                    'width': '{}%'.format(100. / len(data_table.columns)),
-                    'textOverflow': 'hidden'
-                },
-                style_header={
-                    'backgroundColor': '#3d3b4e',
-                    'color': '#f2f2f2'
-                }
-            )
-        ], className='quarter', id='tabla'),
-    html.Div([
-        dcc.Dropdown(
-            id="dropdown-3",
-            options=[{"label": x, "value": x} for x in data_chart.columns],
-            value=data_chart.columns[0],
-            clearable=False,
-        ),
-        dcc.Graph(
-            id='bar-chart-3',
-        ),
-    ], className='quarter')
-        ], className='row')
-
-    return layout
-
-
-def layout_map():
-    data = select_table()
-    data = df_for_map(data)
-    data_1 = pd.read_csv('app/data/new_data.csv')
-    fig1 = px.scatter_geo(data, lat='latitude', lon='longitude', color='ciudad', size='N')
-    fig1.update_layout(legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=0.8
-    ))
-    layout = html.Div([
-        html.Div([
-            dcc.Graph(
-                id='example-graph-2',
-                figure=fig1
-            ),
-        ])
-    ], className='one-row-1')
-
-    return layout
-
-
-
-
-def layout_general():
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-    data = pd.read_csv('app/data/ds_job.csv')[['empleado_id', 'ciudad', 'target']]
-    print(data)
-
-    fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
     data = select_table_pred()
     data_table = data[['empleado_id', 'ciudad', 'target']]
     data_chart = data.drop(columns=['target', 'empleado_id', 'horas_formacion',
@@ -321,7 +235,6 @@ def layout_general():
     return layout
 
 
-
 def layout_map():
     data = select_table_pred()
     data = df_for_map(data)
@@ -344,6 +257,7 @@ def layout_map():
     ], className='one-row-1')
 
     return layout
+
 
 
 
