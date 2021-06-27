@@ -13,6 +13,7 @@ import numpy as np
 from typing import Any, Callable, TypeVar, cast
 
 from.utils_co import latitude, longitude
+from app.src.data.conectBBDD import select_table_pred, select_table
 
 
 def random_seed(seed_value: int) -> None:
@@ -330,6 +331,33 @@ def df_for_map(data):
     data = data.drop(['target'], axis=1).groupby(['ciudad', 'lat', 'lon']).count().reset_index()
     data.columns = ['ciudad', 'latitude', 'longitude', 'N']
     return data
+
+def plot_nlu(empleados=None, ciudad=None):
+    query = 'SELECT * from nlu_hifp'
+    dftemp = pd.DataFrame(select_table(query))[[0, 5, 6, 7, 8]]
+    dftemp.columns = ['empleado_id', 'sc_pago', 'sc_habilidad', 'sc_ambiente', 'sc_avance']
+    if empleados is not None:
+        dftemp.index = dftemp.empleado_id.values
+        dftemp = dftemp.loc[empleados]
+    else:
+        dftemp = dftemp.iloc[:4]
+
+    fig2 = go.Figure(data=[
+        go.Bar(name='sc_pago', x=dftemp.sc_pago, marker_color='rgb(55, 83, 109)'),
+        go.Bar(name='sc_habilidad', x=dftemp.sc_habilidad, marker_color='rgb(26, 118, 255)'),
+        go.Bar(name='sc_ambiente', x=dftemp.sc_ambiente, marker_color='rgb(78, 123, 212)'),
+        go.Bar(name='sc_avance', x=dftemp.sc_avance, marker_color='rgb(152, 225, 213)')
+    ])
+    if ciudad is not None:
+        fig2.update_layout(
+            title='Score de sentimiento en función de distintos aspectos de empleados de la sede de ' + ciudad)
+    else:
+        fig2.update_layout(title='Score de sentimiento de empleados en función de distintos aspectos')
+    fig2.update_xaxes(range=[-1, 1])
+    fig2.update_yaxes(
+        tickvals=range(len(dftemp)),
+        ticktext=dftemp['empleado_id'].values
+    )
 
 def read_input():
     vars = {}

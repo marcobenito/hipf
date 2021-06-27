@@ -2,7 +2,7 @@ from app.src.features.pipeline import *
 ## Diccionario de ciudades posibles.
 ## La estructura de la lista es: [idh, latitud, longitud]
 cities = {
-    'Madrid': [0.913, 40.416775, -3.703790],
+    'Madrid': [0.92, 40.416775, -3.703790],
     'Barcelona': [0.903, 41.390205, 2.154007],
     'Oporto': [0.836, 41.1496, -8.6110],
     'Buenos Aires': [0.884, -34.6132, -58.3772],

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 # import torch
 import os
+import random
 
 from werkzeug.utils import redirect
 
@@ -21,7 +22,7 @@ from flask import Flask, request, render_template, jsonify, url_for, send_file
 from dataclasses import dataclass
 
 from app.src.models.predict import predict_pipeline, extrae, nlu, iniciar_nlu
-from app.src.utils.utils import random_seed, plot_roc
+from app.src.utils.utils import random_seed, plot_roc, plot_nlu
 from app.src.data.conectBBDD import sql_table_train, sql_table_Predict, sql_connection, sql_table_nlu, \
     sql_Insert_predict, sql_update_predict, select_id, sql_insert_nlu, select_table, select_table_pred
 
@@ -248,24 +249,38 @@ def update_bar_chart_1(val):
     #              color="smoker", barmode="group")
     return fig
 
-data = pd.read_csv('app/data/ds_job.csv')[:50]
-#print(data)
-@dash_app.callback(
-    Output("table-pred", "data"),
-    [Input('submit-button-state', 'n_clicks')],
-    [State('input-state', 'value')]
-    )
-def update_table(n_clicks, input):
-    # data = pd.read_csv('app/data/new_data.csv')
-    data = pd.read_csv('app/data/ds_job.csv')[:50]
 
-    data = data[['empleado_id', 'ciudad', 'target']]
-    # mask = df["day"] == day
-    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-    if 'submit-button-state' in changed_id:
-        data = data[data['empleado_id'] == int(input)]
-        print(data)
-        return data.to_dict('records')
+# @dash_app.callback(
+#     Output("bar-graph-nlu", "figure"),
+#     [Input('submit-val', 'n_clicks')],
+#
+#     )
+# def update_nlu(n_clicks, value):
+#     # data = pd.read_csv('app/data/new_data.csv')
+#     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+#     print('hola88')
+#     if 'n_clicks' in changed_id:
+#         data = select_table_pred()
+#         ciudad = data[data['empleado_id'] == value]['ciudad']
+#         new_data = data[data['ciudad'] == ciudad]
+#         emp = new_data['empleado_id'].values
+#         new_data.index = emp
+#         emp.remove(value)
+#         empleados = [value]
+#         if len(emp) == 0:
+#             pass
+#         elif len(emp) > 3:
+#             empleados.append(random.sample(emp, 3))
+#         else:
+#             empleados.append(emp)
+#
+#         fig = plot_nlu(empleados, ciudad)
+#
+#         return fig
+#
+#     else:
+#         fig = plot_nlu()
+#         return fig
 
 
 
