@@ -70,7 +70,7 @@ def predict_pipeline(data, model_info_db_name='hipf_db'):
     # realizando la inferencia con los datos de entrada
     return model.predict(X_pred).tolist()
 
-def load_model(name, bucket_name='hipf-models'):
+def load_model(name, bucket_name='hipf-models-2'):
     """
          Función para cargar el modelo en IBM COS
 
@@ -118,15 +118,30 @@ def load_model_config(db_name):
     query = Query(db, selector={'_id': {'$eq': 'model_config'}})
     return query()['docs'][0]
 
+def iniciar_nlu():
+    # Inicializar datos de acceso desde el script que evaluara los datos de comentarios
+    iam_authentic = 'Ruk59D8Cw_hwNNdl7KoyK5uEtZVNVt_C5Xx9W-uoG-BN'
+    nlu_version = '2019-07-12'
+    url_service = 'https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/70cf1ea3-87d2-43b8-9e1b-a02aab274d75'
+    tipo_analisis = "sentiment"
+    authenticator = IAMAuthenticator(iam_authentic)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(
+        version=nlu_version,
+        authenticator=authenticator
+    )
+
+    natural_language_understanding.set_service_url(url_service)
+    return natural_language_understanding
 
 
-def nlu(texto):
+def nlu(texto,     natural_language_understanding ):
     """
         Definimos una funcion para llamada al analisis de sentimiento enviandole una frase
         que va imprimiendo cada resultado por frase que se va enviando
         Args:
             texto (str) : variable que trae la frase a evaluar utilizando la funcion de NLU
                     de Watson con la funcion de libreria natural_language_undestanding
+            natural_language_understanding : variable que trae el servicio de NLU cargado en la funcion iniciar_nlu()
         Returns :
             response es una lista json con el contenido devuelto por analisis de sentimiento
                     con score y con el label entregado por el analisis evaluado
@@ -142,7 +157,7 @@ def nlu(texto):
 
 
 # Definimos funcion para ejecutar la carga de resultados en un dataframe jsonlist
-def extrae(comentario, tipo_res):
+def extrae(comentario, tipo_res,    natural_language_understanding ):
     """
         Definimos una funcion para llamada al analisis de sentimiento enviandole una frase
         que va analizando y guardando en una lista cada resultado por frase que se va enviando
@@ -152,17 +167,19 @@ def extrae(comentario, tipo_res):
         tipo_res : variable que trae dos valores
                 0 : Para que extraiga solo el score
                 1 : Para que extraiga label y score en formato json
+        natural_language_understanding : variable que trae el servicio de NLU cargado en la funcion iniciar_nlu()
         returns :
             jsonlist es un dataframe convertido de lista json con el contenido devuelto por analisis de sentimiento
                     con score y con el label entregado por el analisis evaluado de cada frase
     """
-
+    tipo_analisis = "sentiment"
     jsonlist = pd.DataFrame()
-    responses = nlu(comentario)
+    responses = nlu(comentario,    natural_language_understanding )
     respuesta = responses[tipo_analisis]
     jsonlist = pd.DataFrame({'label': [respuesta["document"]["label"]], 'score': [respuesta["document"]["score"]]})
-    print(listinit)
+    print(jsonlist)
     if tipo_res == 0:
         return np.array(jsonlist.score)
     elif tipo_res == 1:
         return jsonlist
+

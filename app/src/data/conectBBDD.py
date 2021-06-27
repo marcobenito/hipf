@@ -2,56 +2,60 @@ import sqlite3
 
 from sqlite3 import Error
 
-def sql_connection():
 
+def sql_connection():
     try:
 
         con = sqlite3.connect('app\data\hifp.db')
+        #cursorObj = con.cursor()
+        #cursorObj.execute('SELECT  count(*) from Predict_hifp')
 
+        #rows = cursorObj.fetchall()
+        #print("--->FILAS RECUPERADAS predict_hifp=",rows)
         return con
 
     except Error:
 
         print(Error)
 
-def sql_table_train(con):
 
+def sql_table_train(con):
     cursorObj = con.cursor()
 
-    cursorObj.execute("create table if not exists Train_hifp (empleado_id	INTEGER,ciudad	TEXT,indice_desarrollo_ciudad	REAL,genero	TEXT,experiencia_relevante	TEXT,universidad_matriculado TEXT,nivel_educacion	TEXT,educacion	TEXT,experiencia	TEXT,tamano_compania	TEXT,tipo_compania	TEXT,ultimo_nuevo_trabajo	TEXT,horas_formacion	INTEGER,target 	REAL)")
+    cursorObj.execute(
+        "create table if not exists Train_hifp (empleado_id	INTEGER,ciudad	TEXT,indice_desarrollo_ciudad	REAL,genero	TEXT,experiencia_relevante	TEXT,universidad_matriculado TEXT,nivel_educacion	TEXT,educacion	TEXT,experiencia	TEXT,tamano_compania	TEXT,tipo_compania	TEXT,ultimo_nuevo_trabajo	TEXT,horas_formacion	INTEGER,target 	REAL)")
 
     con.commit()
 
-    con = sql_connection()
+    #con = sql_connection()
 
-    con.close()
+    #con.close()
+
 
 def sql_table_Predict(con):
-
     cursorObj = con.cursor()
 
-    cursorObj.execute("create table if not exists Predict_hifp (empleado_id	INTEGER,ciudad	TEXT,indice_desarrollo_ciudad	REAL,genero	TEXT,experiencia_relevante	TEXT,universidad_matriculado TEXT,nivel_educacion	TEXT,educacion	TEXT,experiencia	TEXT,tamano_compania	TEXT,tipo_compania	TEXT,ultimo_nuevo_trabajo	TEXT,horas_formacion	INTEGER,target 	REAL)")
-
-
+    cursorObj.execute(
+        "create table if not exists Predict_hifp (empleado_id	INTEGER,ciudad	TEXT,indice_desarrollo_ciudad	REAL,genero	TEXT,experiencia_relevante	TEXT,universidad_matriculado TEXT,nivel_educacion	TEXT,educacion	TEXT,experiencia	TEXT,tamano_compania	TEXT,tipo_compania	TEXT,ultimo_nuevo_trabajo	TEXT,horas_formacion	INTEGER,target 	REAL)")
 
     con.commit()
 
-    con = sql_connection()
+    #con = sql_connection()
 
-    con.close()
+    #con.close()
 
 
 def sql_table_nlu(con):
-
     cursorObj = con.cursor()
 
-    cursorObj.execute("create table if not exists nlu_hifp (empleado_id	INTEGER,pago  TEXT,habilidad TEXT,ambiente	TEXT,avance TEXT)")
-
+    cursorObj.execute("create table if not exists nlu_hifp (empleado_id INTEGER,pago TEXT,habilidad TEXT,ambiente TEXT,avance TEXT,sc_pago REAL,sc_habilidad REAL,sc_ambiente REAL,sc_avance REAL)")
+    #cursorObj.execute("""INSERT INTO nlu_hifp(empleado_id, pago,habilidad,ambiente,avance,sc_pago,sc_habilidad,sc_ambiente,sc_avance) VALUES (?,?,?,?,?,?,?,?,?)""", (33,"frase1","frase2","frase3","frase4",1,1,1,1))
     con.commit()
 
-    con = sql_connection()
+    #con = sql_connection()
 
-    con.close()
+    #con.close()
+
 
 def sql_Insert_predict(entities):
     con = sql_connection()
@@ -70,12 +74,26 @@ def sql_Insert_predict(entities):
 
 
 def sql_update_predict(predict):
-
     con = sql_connection()
 
     cursorObj = con.cursor()
 
-    cursorObj.execute('UPDATE Predict_hifp SET target =? where empleado_id=?',predict)
+    cursorObj.execute('UPDATE Predict_hifp SET target =? where empleado_id=?', predict)
+
+    con.commit()
+
+    con.close()
+
+def sql_insert_nlu(pdnlu,score_nlu):
+    """
+
+    :type score_nlu: object
+    """
+    con = sql_connection()
+
+    cursorObj = con.cursor()
+
+    cursorObj.execute("""INSERT INTO nlu_hifp(empleado_id, pago,habilidad,ambiente,avance,sc_pago,sc_habilidad,sc_ambiente,sc_avance) VALUES  (?,?,?,?,?,?,?,?,?)""", (pdnlu[0],pdnlu[1],pdnlu[2],pdnlu[3], pdnlu[4],score_nlu[0], score_nlu[1], score_nlu[2], score_nlu[3]))
 
     con.commit()
 
@@ -91,23 +109,18 @@ def select_id():
     rows = cursorObj.fetchall()
 
     for row in rows:
-     variable=row[0] +1
+        variable = row[0] + 1
 
     con.close()
 
     return variable
 
-def select_table():
-    import pandas as pd
-    con = sql_connection()
-    cursorObj = con.cursor()
+def select_table(query):
+    conq = sql_connection()
+    cursorObj = conq.cursor()
 
-    cursorObj.execute('SELECT  * from Predict_hifp')
+    cursorObj.execute(query)
 
     rows = cursorObj.fetchall()
-    columns = [description[0] for description in cursorObj.description]
-
-    df = pd.DataFrame(rows)
-    df.columns = columns
-
-    return df
+    conq.close()
+    return rows
