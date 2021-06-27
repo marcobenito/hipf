@@ -106,9 +106,9 @@ def index():
 
 ###  ejemplo para MARCO para consultar tabla para graficar
     query='SELECT * from nlu_hifp'
-    dftemp =  pd.DataFrame(select_table(query))
+    dftemp = pd.DataFrame(select_table(query))
     print("Tabla pandas seleccionada nlu_hipf")
-    print(dftemp)
+    print(dftemp.iloc[5])
     return render_template('Inicio.html')
 
 input_values = read_input()
@@ -330,17 +330,17 @@ def handle_data():
         features['experiencia'] = request.form['añosexperiencia']
 
 
-    #features['tamano_compania'] = input_values['tamano_compania']
-    #features['tipo_compania'] = input_values['tipo_compania']
-    if request.form['tamaño']=="":
-        features['tamano_compania'] =np.nan
-    else:
-        features['tamano_compania'] = request.form['tamaño']
-
-    if request.form['Sector']=="":
-        features['tipo_compania'] =np.nan
-    else:
-        features['tipo_compania'] = request.form['Sector']
+    features['tamano_compania'] = input_values['tamano_compania']
+    features['tipo_compania'] = input_values['tipo_compania']
+    # if request.form['tamaño']=="":
+    #     features['tamano_compania'] =np.nan
+    # else:
+    #     features['tamano_compania'] = request.form['tamaño']
+    #
+    # if request.form['Sector']=="":
+    #     features['tipo_compania'] =np.nan
+    # else:
+    #     features['tipo_compania'] = request.form['Sector']
 
     if request.form['lastWork']=="":
         features['ultimo_nuevo_trabajo'] =np.nan
