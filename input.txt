@@ -1,4 +1,4 @@
 #### DATOS DE ENTRADA DE LA EMPRESA ####
-tamano_compania = 1000-4999
+tamano_compania = 50-99
 tipo_compania = Pvt Ltd
 ciudades = Madrid, Barcelona, Oporto, Medellin, Buenos Aires, Monterrey, Mombasa

@@ -12,6 +12,8 @@ import functools
 import numpy as np
 from typing import Any, Callable, TypeVar, cast
 
+from.utils_co import latitude, longitude
+
 
 def random_seed(seed_value: int) -> None:
     """
@@ -292,6 +294,32 @@ def plot_roc(val):
         x=1
     ))
     return fig
+
+def plot_predictions(data, col):
+    data = data[[col, 'target', 'empleado_id']]
+    data1 = data[data['target'] == 1.0]
+    data2 = data[data['target'] == 0.0]
+    data1 = data1.groupby([col, 'target']).count().reset_index()
+    data2 = data2.groupby([col, 'target']).count().reset_index()
+    data3 = pd.concat([data1, data2])
+    data3.columns = [col, 'prediction', 'N']
+    data3.prediction = data3.prediction.map({0.0: 'Negative', 1.0: 'Positive'})
+    fig = px.bar(data3, x=col, y='N', color="prediction", barmode='group',
+                 color_discrete_map={
+                     'Negative': 'rgb(55, 83, 109)',
+                     'Positive': 'rgb(26, 118, 255)'
+                 }
+                 )
+    return fig
+
+def df_for_map(data):
+    data = data[['ciudad', 'target', 'empleado_id']]
+    data = data[data['target'] == 1.0]
+    data['lat'] = data['ciudad'].apply(latitude)
+    data['lon'] = data['ciudad'].apply(longitude)
+    data = data.drop(['target'], axis=1).groupby(['ciudad', 'lat', 'lon']).count().reset_index()
+    data.columns = ['ciudad', 'latitude', 'longitude', 'N']
+    return data
 
 def read_input():
     vars = {}

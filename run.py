@@ -34,10 +34,11 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import matplotlib.pyplot as plt
 import seaborn as sns
-from app.src.utils.utils import plot_feature_vs_target, read_input
+from app.src.utils.utils import plot_feature_vs_target, read_input, plot_predictions
 from app.src.utils.utils_co import idh, latitude, longitude, city
-from app.dashboard.layout import dashboard_layout, report_layout, historic_data_layout, model_layout
-from dash.dependencies import Input, Output
+from app.dashboard.layout import dashboard_layout, report_layout, historic_data_layout, model_layout, layout_map, \
+    layout_general
+from dash.dependencies import Input, Output, State
 sns.set_theme()
 import plotly.express as px
 import plotly.graph_objects as go
@@ -45,7 +46,6 @@ import plotly.graph_objects as go
 from app.src.features.feature_engineering import DataFrameSelector, CreateFeatures, DropFeatures, Stringer, Imputer, Encoder
 from app.src.features.pipeline import combine_features, buckets_experiencia
 from sklearn.pipeline import Pipeline, FeatureUnion
-
 
 # Quitar warnings innecesarios de la salida
 
@@ -183,6 +183,18 @@ def displayClick(btn1, btn2, btn3):
 
 
 @dash_app.callback(
+              Output('container-1', 'children'),
+              [Input('data_view', 'value')],
+              )
+def displayClick(value):
+    if value == 'general':
+        return layout_general()
+    elif value == 'map':
+        return layout_map()
+
+
+
+@dash_app.callback(
     Output("bar-chart", "figure"),
     [Input("dropdown", "value")])
 def update_bar_chart(col):
@@ -190,6 +202,18 @@ def update_bar_chart(col):
     fig = plot_feature_vs_target(data_plot1[col], col)
     # fig = go.bar(data_plot[col], x="sex", y="total_bill",
     #              color="smoker", barmode="group")
+    return fig
+
+@dash_app.callback(
+    Output("bar-chart-3", "figure"),
+    [Input("dropdown-3", "value")])
+def update_bar_chart(col):
+    data_pred = select_table()
+    #mask = df["day"] == day
+    #fig = plot_feature_vs_target(data_plot1[col], col)
+    # fig = go.bar(data_plot[col], x="sex", y="total_bill",
+    #              color="smoker", barmode="group")
+    fig = plot_predictions(data_pred, col)
     return fig
 
 @dash_app.callback(
@@ -223,22 +247,23 @@ def update_bar_chart_1(val):
 data = pd.read_csv('app/data/ds_job.csv')[:50]
 #print(data)
 @dash_app.callback(
-    [Output("table", "data"), Output("table", "columns")],
-    [Input("drop_table", "value")])
-def update_table(col):
+    Output("table-pred", "data"),
+    [Input('submit-button-state', 'n_clicks')],
+    [State('input-state', 'value')]
+    )
+def update_table(n_clicks, input):
+    # data = pd.read_csv('app/data/new_data.csv')
+    data = pd.read_csv('app/data/ds_job.csv')[:50]
+
+    data = data[['empleado_id', 'ciudad', 'target']]
     # mask = df["day"] == day
-    if col != 'nada':
-        new_data = data[[col, 'target','empleado_id']]
-        new_columns = [col, 'target', 'N']
-        cols_to_group = [col, 'target']
-        # new_data = new_data.groupby(cols_to_group).count()
-        # new_data.columns = ['N']
-        # print(new_data[col])
-        # return new_data.to_dict('records'), ['N']
-        return new_data.to_dict('records'), new_columns
-    else:
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if 'submit-button-state' in changed_id:
+        data = data[data['empleado_id'] == int(input)]
         print(data)
-        return data.to_dict('records'), data.columns
+        return data.to_dict('records')
+
+
 
 df = pd.DataFrame({
         "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
@@ -246,21 +271,6 @@ df = pd.DataFrame({
         "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
     })
 
-
-print('Admin das')
-
-@app.route('/fig')
-def fig(text='hola'):
-    from io import BytesIO
-    fig = plt.figure()
-    ax1 = fig.add_subplot(2, 1, 1)
-    ax1.plot(range(10), 'b-')
-    plt.title=text
-
-    img=BytesIO()
-    fig.savefig(img)
-    img.seek(0)
-    return send_file(img, mimetype='image/png')
 
 
 @app.route('/handle_data', methods=["GET", "POST"])

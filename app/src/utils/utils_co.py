@@ -1,6 +1,10 @@
 from app.src.features.pipeline import *
 
 def city(x):
+    try:
+        x = float(x)
+    except:
+        pass
     if x == 0.789:
         return 'Medellin'
     elif x == 0.836:
@@ -51,6 +55,8 @@ def latitude(x):
         return 25.67507
     elif x == 'Mombasa':
         return -4.05
+    else:
+        return 0
 
 
 def longitude(x):
@@ -68,6 +74,8 @@ def longitude(x):
         return -100.31847
     elif x == 'Mombasa':
         return 39.666666667
+    else:
+        return 0
 
 def city_characteristics():
     data = pd.read_csv('app/data/ds_job.csv')

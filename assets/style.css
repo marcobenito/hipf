@@ -94,6 +94,14 @@ body {
     margin:5% 7.5% 0% 7.5%;
 }
 
+.one-row-1{
+    position:relative;
+    width:85%;
+    text-align:center;
+    margin:0% 7.5% 0% 7.5%;
+}
+
+
 /*#conf-matrix{
     position:relative;
     height:300px;
