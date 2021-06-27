@@ -93,7 +93,16 @@ def sql_insert_nlu(pdnlu,score_nlu):
 
     cursorObj = con.cursor()
 
-    cursorObj.execute("""INSERT INTO nlu_hifp(empleado_id, pago,habilidad,ambiente,avance,sc_pago,sc_habilidad,sc_ambiente,sc_avance) VALUES  (?,?,?,?,?,?,?,?,?)""", (pdnlu[0],pdnlu[1],pdnlu[2],pdnlu[3], pdnlu[4],score_nlu[0], score_nlu[1], score_nlu[2], score_nlu[3]))
+    ## Preprocesamos el score, porque si no, da error cuando hay score igual a 0
+    new_score = []
+    for i in score_nlu:
+        if i[0] == 0:
+            new_score.append(0.000001)
+        else:
+            new_score.append(i[0])
+
+
+    cursorObj.execute("""INSERT INTO nlu_hifp(empleado_id, pago,habilidad,ambiente,avance,sc_pago,sc_habilidad,sc_ambiente,sc_avance) VALUES  (?,?,?,?,?,?,?,?,?)""", (pdnlu[0],pdnlu[1],pdnlu[2],pdnlu[3], pdnlu[4],new_score[0], new_score[1], new_score[2], new_score[3]))
 
     con.commit()
 

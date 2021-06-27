@@ -105,10 +105,10 @@ def index():
     print('Tablas creadas')
 
 ###  ejemplo para MARCO para consultar tabla para graficar
-    query='SELECT * from nlu_hifp'
-    dftemp = pd.DataFrame(select_table(query))
-    print("Tabla pandas seleccionada nlu_hipf")
-    print(dftemp.iloc[5])
+    # query='SELECT * from nlu_hifp'
+    # dftemp = pd.DataFrame(select_table(query))
+    # print("Tabla pandas seleccionada nlu_hipf")
+    # print(dftemp.iloc[-1])
     return render_template('Inicio.html')
 
 input_values = read_input()
@@ -382,22 +382,22 @@ def handle_data():
     pdnlu['empleado_id'] = id
 
     if request.form['comen_pago'] == "":
-        pdnlu['pago'] = np.nan
+        pdnlu['pago'] = 'Neutro'
     else:
         pdnlu['pago'] = request.form['comen_pago']
 
     if request.form['comen_habilidad'] == "":
-        pdnlu['habilidad'] = np.nan
+        pdnlu['habilidad'] = 'Neutro'
     else:
         pdnlu['habilidad'] = request.form['comen_habilidad']
 
     if request.form['comen_ambiente'] == "":
-        pdnlu['ambiente'] = np.nan
+        pdnlu['ambiente'] = 'Neutro'
     else:
         pdnlu['ambiente'] = request.form['comen_ambiente']
 
     if request.form['comen_avance'] == "":
-        pdnlu['avance'] = np.nan
+        pdnlu['avance'] = 'Neutro'
     else:
         pdnlu['avance'] = request.form['comen_avance']
 
@@ -413,7 +413,8 @@ def handle_data():
     #score_nlu = pd.Series([0.19,-0.3,-0.5,0.21])
     score_nlu = [extrae(x, 0, natural_language_understanding) for x in pdnlu[1:5]]
 
-    print(score_nlu)
+    for i in score_nlu:
+        print(i[0])
     for i,scores in enumerate(score_nlu):
         print("\n### COMENTARIO ", i+1)
         print(pdnlu[i+1])
