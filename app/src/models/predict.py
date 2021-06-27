@@ -179,7 +179,7 @@ def extrae(comentario, tipo_res,    natural_language_understanding ):
     jsonlist = pd.DataFrame({'label': [respuesta["document"]["label"]], 'score': [respuesta["document"]["score"]]})
     print(jsonlist)
     if tipo_res == 0:
-        return np.array(jsonlist.score)
+        return np.float(jsonlist.score)
     elif tipo_res == 1:
         return jsonlist
 
