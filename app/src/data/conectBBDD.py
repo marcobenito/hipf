@@ -124,3 +124,19 @@ def select_table(query):
     rows = cursorObj.fetchall()
     conq.close()
     return rows
+
+
+def select_table_pred():
+    import pandas as pd
+    con = sql_connection()
+    cursorObj = con.cursor()
+
+    cursorObj.execute('SELECT  * from Predict_hifp')
+
+    rows = cursorObj.fetchall()
+    columns = [description[0] for description in cursorObj.description]
+
+    df = pd.DataFrame(rows)
+    df.columns = columns
+
+    return df

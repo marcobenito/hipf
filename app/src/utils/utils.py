@@ -190,6 +190,8 @@ def plot_feature_vs_target(df, column, vals=None):
         vals = [str(i) for i in vals]
     elif column  == 'nivel_educacion':
         vals = ['Primary School', 'High School', 'Graduate', 'Masters', 'Phd']
+    elif column == 'ultimo_nuevo_trabajo':
+        vals = ['never', '1', '2', '3', '4', '>4']
     else:
         vals = np.unique(df[column])
     # if vals is None:
@@ -203,10 +205,11 @@ def plot_feature_vs_target(df, column, vals=None):
         t[1,i] /= df[df[column] == value].value_counts().sum()
 
     df1 = pd.DataFrame(t.T, index=vals).reset_index()
-
+    df1.columns = ['vals', 0, 1]
+    print(df1)
     fig = go.Figure(data=[
-        go.Bar(name='0', x=df1['index'], y=df1[0], marker_color='rgb(55, 83, 109)'),
-        go.Bar(name='1', x=df1['index'], y=df1[1], marker_color='rgb(26, 118, 255)')
+        go.Bar(name='0', x=df1.index, y=df1[0], marker_color='rgb(55, 83, 109)'),
+        go.Bar(name='1', x=df1.index, y=df1[1], marker_color='rgb(26, 118, 255)')
     ])
     # plt.figure()
     # df1.plot.bar(stacked=True)
@@ -216,6 +219,9 @@ def plot_feature_vs_target(df, column, vals=None):
                       xaxis_title=column,
                       yaxis_title='Porcentaje'
                       )
+    fig.update_xaxes(
+        tickvals=df1.index,
+        ticktext=df1['vals'].values)
     #fig.show()
     return fig
 
@@ -263,6 +269,10 @@ def df_for_plotting1():
     test = data[['target', 'tamano_compania']]
     test['tamano_compania'] = test['tamano_compania'].apply(lambda x: str(x))
     new_data['tamano_compania'] = test[test['tamano_compania'] != 'nan']
+
+    test = data[['target', 'tipo_compania']]
+    test['tipo_compania'] = test['tipo_compania'].apply(lambda x: str(x))
+    new_data['tipo_compania'] = test[test['tipo_compania'] != 'nan']
 
     return new_data
 

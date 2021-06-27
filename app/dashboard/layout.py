@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from app.src.utils.utils import df_for_plotting1, df_for_plotting, df_for_map
 from app.src.models.train_model import load_model_metrics
-from app.src.data.conectBBDD import select_table
+from app.src.data.conectBBDD import select_table_pred
 
 
 
@@ -82,13 +82,7 @@ def report_layout():
     return layout
 
 def historic_data_layout():
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-    fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    data = pd.read_csv('app/data/ds_job.csv')[:50]
+
     data_plot1 = df_for_plotting1()
     data_plot = df_for_plotting()
 
@@ -276,7 +270,7 @@ def layout_general():
     print(data)
 
     fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-    data = select_table()
+    data = select_table_pred()
     data_table = data[['empleado_id', 'ciudad', 'target']]
     data_chart = data.drop(columns=['target', 'empleado_id', 'horas_formacion',
                                     'tipo_compania', 'tamano_compania',
@@ -329,7 +323,7 @@ def layout_general():
 
 
 def layout_map():
-    data = select_table()
+    data = select_table_pred()
     data = df_for_map(data)
     data_1 = pd.read_csv('app/data/new_data.csv')
     fig1 = px.scatter_geo(data, lat='latitude', lon='longitude', color='ciudad', size='N')

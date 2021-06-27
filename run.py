@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from app.src.models.predict import predict_pipeline, extrae, nlu, iniciar_nlu
 from app.src.utils.utils import random_seed, plot_roc
 from app.src.data.conectBBDD import sql_table_train, sql_table_Predict, sql_connection, sql_table_nlu, \
-    sql_Insert_predict, sql_update_predict, select_id, sql_insert_nlu, select_table
+    sql_Insert_predict, sql_update_predict, select_id, sql_insert_nlu, select_table, select_table_pred
 
 matplotlib.use('Agg')
 import warnings
@@ -212,7 +212,7 @@ def update_bar_chart(col):
     Output("bar-chart-3", "figure"),
     [Input("dropdown-3", "value")])
 def update_bar_chart(col):
-    data_pred = select_table()
+    data_pred = select_table_pred()
     #mask = df["day"] == day
     #fig = plot_feature_vs_target(data_plot1[col], col)
     # fig = go.bar(data_plot[col], x="sex", y="total_bill",
@@ -267,13 +267,6 @@ def update_table(n_clicks, input):
         print(data)
         return data.to_dict('records')
 
-
-
-df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
 
 
 
@@ -337,17 +330,17 @@ def handle_data():
         features['experiencia'] = request.form['añosexperiencia']
 
 
-    features['tamano_compania'] = input_values['tamano_compania']
-    features['tipo_compania'] = input_values['tipo_compania']
-    # if request.form['tamaño']=="":
-    #     features['tamano_compania'] =np.nan
-    # else:
-    #     features['tamano_compania'] = request.form['tamaño']
+    #features['tamano_compania'] = input_values['tamano_compania']
+    #features['tipo_compania'] = input_values['tipo_compania']
+    if request.form['tamaño']=="":
+        features['tamano_compania'] =np.nan
+    else:
+        features['tamano_compania'] = request.form['tamaño']
 
-    # if request.form['Sector']=="":
-    #     features['tipo_compania'] =np.nan
-    # else:
-    #     features['tipo_compania'] = request.form['Sector']
+    if request.form['Sector']=="":
+        features['tipo_compania'] =np.nan
+    else:
+        features['tipo_compania'] = request.form['Sector']
 
     if request.form['lastWork']=="":
         features['ultimo_nuevo_trabajo'] =np.nan
