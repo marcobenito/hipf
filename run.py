@@ -1,3 +1,4 @@
+import app as app
 import flask
 import matplotlib
 import numpy as np
@@ -18,7 +19,7 @@ from app.src.models import train_model
 #from app.src.models import  train
 #from os import makedirs
 import matplotlib.pyplot as plt
-from flask import Flask, request, render_template, jsonify, url_for, send_file
+from flask import Flask, request, render_template, jsonify, url_for, send_file, session
 from dataclasses import dataclass
 
 from app.src.models.predict import predict_pipeline, extrae, nlu, iniciar_nlu
@@ -55,8 +56,8 @@ warnings.filterwarnings('ignore')
 
 
 MODEL = None
-#DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
+#DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # inicializar la app bajo el framework Flask
 app = Flask(__name__)
@@ -118,15 +119,29 @@ idh = [idh(city) for city in cities]
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+
+
+    print('Login')
+
+
     usuario = request.form['username']
     password = request.form['password']
+    #request.session['usuario'] = usuario
 
+    print(usuario)
     if usuario != 'admin':  # if a user is found, we want to redirect back to signup page so user can try again
        ##Accedemos al formulario
         return render_template('formu.html', cities=cities, idh=idh)
     else:
         ##Accedemos a la página de Administrador
         return render_template('signup_form.html')
+
+@app.route('/logintrain', methods=["GET", "POST"])
+def logintrain():
+
+    usuario = 'admin'
+       ##Accedemos al formulario
+    return render_template('signup_form.html', cities=cities, idh=idh)
 
 
 df = px.data.tips()
@@ -147,8 +162,10 @@ def admin_train():
             print ('---->Ruta del fichero', df_path)
             train_model.training_pipeline(df_path)
             print('---->Sale del trainmodel')
-            return render_template('train.html')
-            #return render_template('signup_form.html')
+            mensaje = 'El Modelo ha sido entrenado con Exito'
+
+            return render_template('train.html', name=mensaje)
+
         elif request.form['tran_dash'] == 'dashboard':
             dashboard_layout(dash_app)
             #funcion3()
@@ -445,7 +462,9 @@ def handle_data():
     sql_insert_nlu(pdnlu, score_nlu)
     print("\n### Los datos fueron insertados en tabla Nlu_hipf ### ")
 
-    return {'Predicted value': pred }
+    mensaje='Muchas gracias por enviar su encuesta.'
+
+    return render_template('encuesta_fin.html', name=mensaje)
 
 
 # main
