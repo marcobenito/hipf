@@ -170,7 +170,6 @@ class IBMCOS:
         return obj
 
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 def plot_feature_vs_target(df, column, vals=None):
