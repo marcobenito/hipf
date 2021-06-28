@@ -1,10 +1,9 @@
-<!-- templates/profile.html -->
+<!DOCTYPE html>
 {% block content %}
 <html>
 <script type="text/javascript" src="{{url_for('static', filename='jquery.min.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style_formu.css') }}">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
 <style>
   /* Span style */
 	#text {
@@ -12,7 +11,7 @@
 }
 *{box-sizing:border-box;}
 
-body{
+form{
 	width:1200px;
 	padding:5px;
 	border-radius:10px;
@@ -20,14 +19,14 @@ body{
 	background-color:#F7F9F9;
 }
 
-body label{
+form label{
 	width:800px;
 	font-weight:bold;
 	display:inline-block;
 }
 
-body input[type="text"],
-body input[type="email"]{
+form input[type="text"],
+form input[type="email"]{
 	width:180px;
 	padding:3px 10px;
 	border:1px solid #f6f6f6;
@@ -37,7 +36,7 @@ body input[type="email"]{
 	display:inline-block;
 }
 
-body input[type="submit"]{
+form input[type="submit"]{
 	width:100%;
 	padding:8px 16px;
 	margin-top:32px;
@@ -48,7 +47,7 @@ body input[type="submit"]{
 	background-color:#E3F389;
 } 
 
-body input[type="submit"]:hover{
+form input[type="submit"]:hover{
 	cursor:pointer;
 }
 
@@ -64,31 +63,27 @@ textarea{
 	display:block;
 }
 </style>
-<script type="text/javascript">
-
-
-</script>
 <body>
 	<form>
 	<div class="container">
 		<div class="">
 		<div></div>
-			<div>
-				  <center><h1>Encuesta de Satisfacción <span id="text" style=" color: #4DAF74 !important;">HIPF</span></h1></center> 
+			<div style="border:1px solid #f6f6f6 !important;">
+				  <center><h1>Encuesta de Satisfacción <span id="text">HIPF</span></h1></center> 
 			</div>
 		</div>
 		<div style="text-align:right !important;align=middle">
-			 <a href="{{ url_for('logintrain') }}" src="{{url_for('static', filename='offline_22.png') }}"><img src="{{url_for('static', filename='offline_22.png') }}"/></a>
+			 <a href="{{ url_for('index') }}" src="{{url_for('static', filename='offline_22.png') }}"><img src="{{url_for('static', filename='offline_22.png') }}"/></a>
 			<!--<input type="image" alt="Salir" src="{{url_for('static', filename='offline_22.png') }}" width="30" height="30">-->
 		</div>
-	</div>
-	<div>	
+		<div>	
 		<h1 class="title"><center>
 		  {{ name }}
 		</h1></center>	
-	</div>	
+	    </div>	
+	</div>
+	<div>
 </body>
 <form>
 </html>
-
 {% endblock %}
