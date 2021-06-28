@@ -160,15 +160,7 @@ def model_layout():
 
 
 def layout_general():
-    df = pd.DataFrame({
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-    data = pd.read_csv('app/data/ds_job.csv')[['empleado_id', 'ciudad', 'target']]
-    print(data)
 
-    fig1 = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
     data = select_table_pred()
     data_table = data[['empleado_id', 'ciudad', 'target']]
     data_chart = data.drop(columns=['target', 'empleado_id', 'horas_formacion',
