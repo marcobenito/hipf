@@ -6,7 +6,6 @@ import numpy as np
 import dash
 import dash_table
 import plotly.express as px
-import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from app.src.utils.utils import df_for_plotting1, df_for_plotting, df_for_map, plot_nlu
 from app.src.models.train_model import load_model_metrics
